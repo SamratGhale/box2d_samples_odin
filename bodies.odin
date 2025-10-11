@@ -2,6 +2,8 @@ package main
 import b2 "vendor:box2d"
 import "core:math"
 
+/*
+
 Kinematic :: struct {
 	using sample : Sample,
 
@@ -67,3 +69,4 @@ kinematic_step :: proc(using kinematic : ^Kinematic){
 	sample_step(&kinematic.sample)
 	time += time_step
 }
+*/

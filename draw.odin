@@ -48,7 +48,7 @@ camera_convert_screen_to_world :: proc(using cam : ^Camera, ps : b2.Vec2) -> b2.
 	lower := center - extents
 	upper := center + extents
 
-	pw :b2.Vec2= {(1.0 - u) * lower.x + u * upper.x, (1.0 - v) * lower.y + v * upper.y} 
+	pw :b2.Vec2= {(1.0 - u) * lower.x + u * upper.x, (1.0 - v) * lower.y + v * upper.y}
 	return pw
 }
 
@@ -65,7 +65,7 @@ camera_convert_world_to_screen :: proc(using cam : ^Camera, pw : b2.Vec2) -> b2.
 	u := (pw.x - lower.x)/ (upper.x - lower.x)
 	v := (pw.y - lower.y)/ (upper.y - lower.y)
 
-	ps :b2.Vec2= {u * w, (1.0 - v) * h} 
+	ps :b2.Vec2= {u * w, (1.0 - v) * h}
 	return ps
 }
 
@@ -78,8 +78,8 @@ camera_build_project_matrix :: proc(using cam: ^Camera, z_bias: f32) -> [4][4]f3
 
 	ratio   := f32(width) / f32(height)
 	extents : b2.Vec2 = { zoom * ratio, zoom}
-	lower   := center - extents 
-	upper   := center + extents 
+	lower   := center - extents
+	upper   := center + extents
 
 	w := upper.x - lower.x
 	h := upper.y - lower.y
@@ -122,7 +122,6 @@ background_create :: proc(using back: ^Background){
 
 	ok : bool
 	program, ok = gl.load_shaders_file("shaders/background.vs", "shaders/background.fs")
-	fmt.println(ok)
 	check_opengl()
 	uniforms   = gl.get_uniforms_from_program(program)
 
@@ -295,7 +294,7 @@ points_flush :: proc(using point: ^Point, cam: ^Camera){
 		check_opengl()
 
 		count -= 2048
-		base  += 2048 
+		base  += 2048
 	}
 
 	gl.Disable(gl.PROGRAM_POINT_SIZE)
@@ -466,10 +465,10 @@ circle_create :: proc(using circle : ^Circles){
 	gl.GenBuffers(2, &vbos[0])
 
 	gl.BindVertexArray(vao)
-	gl.EnableVertexAttribArray(vertex_attribute) 
-	gl.EnableVertexAttribArray(position_instance) 
-	gl.EnableVertexAttribArray(radiusInstance)    
-	gl.EnableVertexAttribArray(colorInstance)     
+	gl.EnableVertexAttribArray(vertex_attribute)
+	gl.EnableVertexAttribArray(position_instance)
+	gl.EnableVertexAttribArray(radiusInstance)
+	gl.EnableVertexAttribArray(colorInstance)
 
 	//vertex buffer for single quad
 	a :f32= 1.1
@@ -479,11 +478,11 @@ circle_create :: proc(using circle : ^Circles){
 	}
 
 	gl.BindBuffer(gl.ARRAY_BUFFER, vbos[0])
-	gl.BufferData(gl.ARRAY_BUFFER, size_of(vertices), &vertices[0], gl.STATIC_DRAW)
+	gl.BufferData(gl.ARRAY_BUFFER, size_of(b2.Vec2) * 6, &vertices[0], gl.STATIC_DRAW)
 	gl.VertexAttribPointer(vertex_attribute, 2, gl.FLOAT, gl.FALSE, 0, 0)
 
 	//
-	gl.BindBuffer(gl.ARRAY_BUFFER, vbos[1])	
+	gl.BindBuffer(gl.ARRAY_BUFFER, vbos[1])
 	gl.BufferData(gl.ARRAY_BUFFER, batch_size * size_of(CircleData), nil, gl.DYNAMIC_DRAW )
 
 	gl.VertexAttribPointer(position_instance, 2, gl.FLOAT, gl.FALSE, size_of(CircleData), offset_of(CircleData, pos))
@@ -542,6 +541,7 @@ circle_flush :: proc(using circle: ^Circles, cam: ^Camera){
 	for count > 0{
 		batch_count := min(count, batch_size)
 
+		fmt.println(batch_count)
 		gl.BufferSubData(gl.ARRAY_BUFFER, 0, int(batch_count * size_of(CircleData)), &circles[base])
 		gl.DrawArraysInstanced(gl.TRIANGLES, 0, 6, batch_count)
 
@@ -568,7 +568,7 @@ SolidCircleData :: struct {
 
 SolidCircle :: struct {
 	circles      : [dynamic]SolidCircleData,
-	program, vao : u32, 
+	program, vao : u32,
 	vbo          : [2]u32,
 	uniforms     : gl.Uniforms,
 }
@@ -588,10 +588,10 @@ solid_circle_create :: proc(using circle: ^SolidCircle){
 	radius_instance    :u32= 2
 	color_instance     :u32= 3
 
-	gl.EnableVertexAttribArray(vertex_attribute)   
-	gl.EnableVertexAttribArray(transform_instance) 
-	gl.EnableVertexAttribArray(radius_instance)    
-	gl.EnableVertexAttribArray(color_instance)     
+	gl.EnableVertexAttribArray(vertex_attribute)
+	gl.EnableVertexAttribArray(transform_instance)
+	gl.EnableVertexAttribArray(radius_instance)
+	gl.EnableVertexAttribArray(color_instance)
 
 	batch_size : i32 = 2048
 
@@ -603,16 +603,16 @@ solid_circle_create :: proc(using circle: ^SolidCircle){
 	}
 
 	gl.BindBuffer(gl.ARRAY_BUFFER, vbo[0])
-	gl.BufferData(gl.ARRAY_BUFFER, size_of(vertices), &vertices[0], gl.STATIC_DRAW)
+	gl.BufferData(gl.ARRAY_BUFFER, size_of(b2.Vec2) * 6, &vertices[0], gl.STATIC_DRAW)
 	gl.VertexAttribPointer(vertex_attribute, 2, gl.FLOAT, gl.FALSE, 0, 0)
 
 	//
-	gl.BindBuffer(gl.ARRAY_BUFFER, vbo[1])	
+	gl.BindBuffer(gl.ARRAY_BUFFER, vbo[1])
 	gl.BufferData(gl.ARRAY_BUFFER, int(batch_size * size_of(SolidCircleData)), nil, gl.DYNAMIC_DRAW )
 
 	gl.VertexAttribPointer(transform_instance, 4, gl.FLOAT, gl.FALSE, size_of(SolidCircleData), offset_of(SolidCircleData, transform))
 	gl.VertexAttribPointer(radius_instance,     1, gl.FLOAT, gl.FALSE, size_of(SolidCircleData), offset_of(SolidCircleData, radius))
-	gl.VertexAttribPointer(color_instance,      4, gl.UNSIGNED_BYTE, gl.TRUE, size_of(SolidCircleData), offset_of(CircleData, rgba))
+	gl.VertexAttribPointer(color_instance,      4, gl.UNSIGNED_BYTE, gl.TRUE, size_of(SolidCircleData), offset_of(SolidCircleData, rgba))
 
 	gl.VertexAttribDivisor(transform_instance, 1)
 	gl.VertexAttribDivisor(radius_instance,    1)
@@ -707,9 +707,12 @@ SolidCapsules :: struct {
 
 solid_capsules_create :: proc(using capsule : ^SolidCapsules){
 	program, _  = gl.load_shaders("shaders/solid_capsule.vs", "shaders/solid_capsule.fs")
+	check_opengl()
 	uniforms    = gl.get_uniforms_from_program(program)
 
-	batch_size := i32(len(capsules))
+
+	//batch_size := i32(len(capsules))
+	batch_size : i32 = 512
 
 
 	vertex_attribute   :u32= 0
@@ -723,11 +726,11 @@ solid_capsules_create :: proc(using capsule : ^SolidCapsules){
 
 	gl.BindVertexArray(vao)
 
-	gl.EnableVertexAttribArray(vertex_attribute)   
-	gl.EnableVertexAttribArray(transform_instance) 
-	gl.EnableVertexAttribArray(radius_instance)    
-	gl.EnableVertexAttribArray(length_instance) 
-	gl.EnableVertexAttribArray(color_instance)     
+	gl.EnableVertexAttribArray(vertex_attribute)
+	gl.EnableVertexAttribArray(transform_instance)
+	gl.EnableVertexAttribArray(radius_instance)
+	gl.EnableVertexAttribArray(length_instance)
+	gl.EnableVertexAttribArray(color_instance)
 
 	//Vertex buffer for single quad
 	a :f32= 1.1
@@ -737,11 +740,11 @@ solid_capsules_create :: proc(using capsule : ^SolidCapsules){
 	}
 
 	gl.BindBuffer(gl.ARRAY_BUFFER, vbo[0])
-	gl.BufferData(gl.ARRAY_BUFFER, size_of(vertices), &vertices[0], gl.STATIC_DRAW)
+	gl.BufferData(gl.ARRAY_BUFFER, size_of(b2.Vec2) * 6, &vertices[0], gl.STATIC_DRAW)
 	gl.VertexAttribPointer(vertex_attribute, 2, gl.FLOAT, gl.FALSE, 0, 0)
 
 	//
-	gl.BindBuffer(gl.ARRAY_BUFFER, vbo[1])	
+	gl.BindBuffer(gl.ARRAY_BUFFER, vbo[1])
 	gl.BufferData(gl.ARRAY_BUFFER, int(batch_size * size_of(CapsuleData)), nil, gl.DYNAMIC_DRAW )
 
 	gl.VertexAttribPointer(transform_instance, 4, gl.FLOAT, gl.FALSE, size_of(CapsuleData), offset_of(CapsuleData, transform))
@@ -793,7 +796,7 @@ solid_capsules_add :: proc(using capsule : ^SolidCapsules, p1, p2: b2.Vec2, radi
 
 	rgba := make_rgba(c, 1.0)
 
-	append(&capsules, CapsuleData{transform, radius, length, rgba} )
+	append(&capsule.capsules, CapsuleData{transform, radius, length, rgba} )
 }
 
 solid_capsules_flush :: proc(using capsule : ^SolidCapsules, cam : ^Camera){
@@ -801,7 +804,7 @@ solid_capsules_flush :: proc(using capsule : ^SolidCapsules, cam : ^Camera){
 
 	if count == 0 do return
 
-	batch_count :i32= 2048
+	//batch :i32= 2048
 
 	gl.UseProgram(program)
 
@@ -819,15 +822,16 @@ solid_capsules_flush :: proc(using capsule : ^SolidCapsules, cam : ^Camera){
 	base :i32= 0
 
 	for count > 0{
-		batch_count := min(count, batch_count)
+		batch_count := min(count, 2048)
+		//fmt.println(size_of(capsules[0]))
 
-		gl.BufferSubData(gl.ARRAY_BUFFER, 0, int(batch_count * size_of(CapsuleData)), &capsules[base])
+		gl.BufferSubData(gl.ARRAY_BUFFER, 0, int(batch_count * size_of(CapsuleData)), &capsule.capsules[base])
 		gl.DrawArraysInstanced(gl.TRIANGLES, 0, 6, batch_count)
 
 		check_opengl()
 
 		count -= 2048
-		base  += 2048 
+		base  += 2048
 	}
 
 	gl.Disable(gl.BLEND)
@@ -854,7 +858,7 @@ PolygonData :: struct #packed{
 SolidPolygon :: struct {
 	polygons     : [dynamic]PolygonData,
 	vao, program : u32,
-	vbo          : [2]u32, 
+	vbo          : [2]u32,
 	uniforms     : gl.Uniforms,
 }
 
@@ -883,15 +887,15 @@ solid_polygon_create :: proc(using polygon : ^SolidPolygon){
 
 	gl.BindVertexArray(vao)
 
-	gl.EnableVertexAttribArray(vertex_attribute)  
+	gl.EnableVertexAttribArray(vertex_attribute)
 	gl.EnableVertexAttribArray(instance_transform)
-	gl.EnableVertexAttribArray(instance_point12)  
-	gl.EnableVertexAttribArray(instance_point34)  
-	gl.EnableVertexAttribArray(instance_point56)  
-	gl.EnableVertexAttribArray(instance_point78)  
+	gl.EnableVertexAttribArray(instance_point12)
+	gl.EnableVertexAttribArray(instance_point34)
+	gl.EnableVertexAttribArray(instance_point56)
+	gl.EnableVertexAttribArray(instance_point78)
 	gl.EnableVertexAttribArray(instance_point_count)
 	gl.EnableVertexAttribArray(instance_radius)
-	gl.EnableVertexAttribArray(instance_color)  
+	gl.EnableVertexAttribArray(instance_color)
 
 	a :f32= 1.1
 
@@ -900,12 +904,11 @@ solid_polygon_create :: proc(using polygon : ^SolidPolygon){
 	}
 
 	gl.BindBuffer(gl.ARRAY_BUFFER, vbo[0])
-	fmt.println(size_of(vertices))
 	gl.BufferData(gl.ARRAY_BUFFER, size_of(b2.Vec2) * 6, &vertices[0], gl.STATIC_DRAW)
 	gl.VertexAttribPointer(vertex_attribute, 2, gl.FLOAT, gl.FALSE, 0, 0)
 
 	//
-	gl.BindBuffer(gl.ARRAY_BUFFER, vbo[1])	
+	gl.BindBuffer(gl.ARRAY_BUFFER, vbo[1])
 	gl.BufferData(gl.ARRAY_BUFFER, int(batch_size * size_of(PolygonData)), nil, gl.DYNAMIC_DRAW)
 
 	gl.VertexAttribPointer(instance_transform, 4, gl.FLOAT, false, size_of(PolygonData), offset_of(PolygonData, transform))
@@ -919,13 +922,13 @@ solid_polygon_create :: proc(using polygon : ^SolidPolygon){
 
 
 	gl.VertexAttribDivisor(instance_transform, 1)
-	gl.VertexAttribDivisor(instance_point12, 1)  
-	gl.VertexAttribDivisor(instance_point34, 1)  
-	gl.VertexAttribDivisor(instance_point56, 1)  
-	gl.VertexAttribDivisor(instance_point78, 1)  
+	gl.VertexAttribDivisor(instance_point12, 1)
+	gl.VertexAttribDivisor(instance_point34, 1)
+	gl.VertexAttribDivisor(instance_point56, 1)
+	gl.VertexAttribDivisor(instance_point78, 1)
 	gl.VertexAttribDivisor(instance_point_count, 1)
 	gl.VertexAttribDivisor(instance_radius, 1)
-	gl.VertexAttribDivisor(instance_color, 1)  
+	gl.VertexAttribDivisor(instance_color, 1)
 
 	check_opengl()
 
@@ -1012,7 +1015,7 @@ Draw :: struct {
 	circles    : Circles,
 	solid_circles : SolidCircle,
 	solid_capsules : SolidCapsules,
-	polygons : SolidPolygon,
+	polygons   : SolidPolygon,
 
 	drawCounters : bool,
 
@@ -1035,7 +1038,6 @@ draw_aabb :: proc(using draw : ^Draw, aabb : b2.AABB, c : b2.HexColor){
 
 DrawPolygonFcn ::proc "c" (vertices: [^]b2.Vec2, vertexCount : i32, color: b2.HexColor, ctx : rawptr){
 
-
 	context = runtime.default_context()
 	draw : ^Draw = cast(^Draw)ctx
 
@@ -1049,7 +1051,7 @@ DrawPolygonFcn ::proc "c" (vertices: [^]b2.Vec2, vertexCount : i32, color: b2.He
 
 DrawSolidPolygonFcn :: proc "c" (transform : b2.Transform, vertices: [^]b2.Vec2, vertexCount: i32, radius: f32, color: b2.HexColor, ctx: rawptr){
 
-	draw : ^Draw = cast(^Draw)ctx
+	draw    : ^Draw = cast(^Draw)ctx
 	context = runtime.default_context()
 
 	solid_polygon_add(&draw.polygons, transform, vertices, vertexCount, radius, color)
@@ -1116,7 +1118,7 @@ DrawPointFcn :: proc "c" (p : b2.Vec2, size: f32, color: b2.HexColor, ctx: rawpt
 DrawString :: proc (draw : ^Draw,  x, y: int, fmt : cstring, args : ..any){
 	//@(link_name="ImGui_TextColored")     TextColored     :: proc(col: Vec4, fmt: cstring, #c_vararg args: ..any)      --- // shortcut for PushStyleColor(ImGuiCol_Text, col); Text(fmt, ...); PopStyleColor();
 
-	im.Begin("Overlay", nil, {.NoTitleBar, .NoNavInputs, .AlwaysAutoResize, .NoScrollbar})
+	im.Begin("Overlay", nil, {.NoTitleBar, .NoNavInputs, .AlwaysAutoResize, .NoScrollbar, .NoMouseInputs, .NoFocusOnAppearing})
 
 	//im.PushFont(&draw.regular_font)
 	im.SetCursorPos(b2.Vec2{f32(x), f32(y)})
@@ -1129,7 +1131,8 @@ DrawString :: proc (draw : ^Draw,  x, y: int, fmt : cstring, args : ..any){
 DrawStringVec :: proc (draw : ^Draw, p : b2.Vec2, fmt : cstring, args : ..any){
 	ps := camera_convert_world_to_screen(&draw.cam , p)
 
-	im.Begin("Overlay", nil, {.NoNavInputs, .AlwaysAutoResize, .NoScrollbar})
+	im.Begin("Overlay", nil, {.NoTitleBar, .NoNavInputs, .AlwaysAutoResize, .NoScrollbar, .NoMouseInputs, .NoFocusOnAppearing})
+
 	//im.PushFont(&draw.regular_font)
 	im.SetCursorPos(ps)
 	im.TextColored(im.Vec4{230, 153, 153, 255}, fmt, args)
@@ -1140,14 +1143,13 @@ DrawStringVec :: proc (draw : ^Draw, p : b2.Vec2, fmt : cstring, args : ..any){
 DrawStringFcn :: proc "c" (p: b2.Vec2, s : cstring, color : b2.HexColor, ctx : rawptr){
 	context = runtime.default_context()
 	draw : ^Draw = cast(^Draw)ctx
-	fmt.println(s)
 	DrawStringVec(draw, p, s)
 }
 
 draw_flush :: proc(using draw: ^Draw){
 	solid_circle_flush(&solid_circles, &cam)
-	solid_capsules_flush(&solid_capsules, &cam)
 	solid_polygon_flush(&polygons, &cam)
+	solid_capsules_flush(&solid_capsules, &cam)
 	circle_flush(&circles, &cam)
 	lines_flush(&lines, &cam)
 	points_flush(&points, &cam)
@@ -1158,10 +1160,10 @@ draw_create :: proc(using draw: ^Draw, camera : ^Camera){
 	draw.cam = cam
 	background_create(&background)
 	points_create(&points)
+	solid_capsules_create(&solid_capsules)
 	lines_create(&lines)
 	circle_create(&circles)
 	solid_circle_create(&solid_circles)
-	solid_capsules_create(&solid_capsules)
 	solid_polygon_create(&polygons)
 
 
@@ -1171,19 +1173,19 @@ draw_create :: proc(using draw: ^Draw, camera : ^Camera){
 	debug_draw.DrawSolidPolygonFcn = DrawSolidPolygonFcn
 	debug_draw.DrawCircleFcn      = DrawCircleFcn
 	debug_draw.DrawSolidCircleFcn = DrawSolidCircleFcn
+	debug_draw.DrawSolidCapsuleFcn = DrawSolidCapsuleFcn
 	debug_draw.DrawSegmentFcn     = DrawSegmentFcn
 	debug_draw.DrawTransformFcn   = DrawTransformFcn
 	debug_draw.DrawPointFcn       = DrawPointFcn
 	debug_draw.DrawStringFcn      = DrawStringFcn
 	debug_draw.drawingBounds      = bounds
 
-
 	debug_draw.useDrawingBounds     = false
 	debug_draw.drawShapes           = true
 	debug_draw.drawJoints           = true
 	debug_draw.drawJointExtras      = false
 	debug_draw.drawBounds           = false
-	debug_draw.drawMass             = true
+	debug_draw.drawMass             = false
 	debug_draw.drawContacts         = false
 	debug_draw.drawGraphColors      = false
 	debug_draw.drawContactNormals   = false
@@ -1197,25 +1199,6 @@ draw_create :: proc(using draw: ^Draw, camera : ^Camera){
 	debug_draw.userContext = rawptr(draw)
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

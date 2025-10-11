@@ -1,9 +1,10 @@
 package main
 import b2 "vendor:box2d"
 import glfw "vendor:glfw"
-import enki "shared:odin-enkiTS/enki"
 import "core:fmt"
 import im "shared:odin-imgui"
+
+/*
 
 max_tasks :i32: 64
 max_threads :i32: 64
@@ -37,7 +38,7 @@ Sample :: struct {
 
 	text_line, text_increment: i32,
 
-	task_scheduler : ^enki.TaskScheduler,	
+	task_scheduler : ^enki.TaskScheduler,
 }
 
 SampleCreateFnc :: proc(ctx: ^SampleContext) -> ^Sample
@@ -94,8 +95,6 @@ task_finish :: proc(task_ptr, user_ctx: rawptr){
 sample_create :: proc(using sample: ^Sample, sample_ctx : ^SampleContext){
 	sample.ctx = sample_ctx
 
-	fmt.println(sample.draw.cam)
-
 	task_scheduler = enki.NewTaskScheduler()
 	enki.InitTaskSchedulerNumThreads(task_scheduler, sample_ctx.workerCount)
 
@@ -142,7 +141,7 @@ sample_draw_text_line :: proc (using sample: ^Sample,  text : cstring, args : ..
 
 	//im.SetCursorPos({5.0, f32(text_line)})
 
-	im.TextColored(im.Vec4{230.0/155.0, 153.0/255.0, 153.0/255.0, 255/255}, text, args)
+	im.TextColored(im.Vec4{230.0/255.0, 153.0/255.0, 153.0/255.0, 255/255}, text, args)
 
 	//im.PopFont()
 	im.End()
@@ -238,23 +237,4 @@ sample_register :: proc(category, name : string, fcn : SampleCreateFnc) -> i32{
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/

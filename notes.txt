@@ -1,0 +1,29 @@
+TODO:
+
+Before handling input and making editor make the entity def stuffs
+
+1. Porting game editor and shapes creator
+
+
+Abstracting the box2d render logic
+Library model probably in single file
+
+Should be independent from the game logic
+
+The game is responsible for creating and storing world_id
+
+expose api to be used by game
+
+(glfw, imgui, box2d)
+
+struct ion_state{
+}
+
+
+ion_init
+
+ion_window_should_close
+
+ion_update_frame (also handle input, handmadehero style)
+
+ion_end_frame

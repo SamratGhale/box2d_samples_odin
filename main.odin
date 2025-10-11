@@ -1,214 +1,191 @@
 package main
 
-import gl "vendor:OpenGL"
 import "core:fmt"
-import "vendor:glfw"
-import b2 "vendor:box2d"
-import enki "shared:odin-enkiTS/enki"
 import im "shared:odin-imgui"
 import "shared:odin-imgui/imgui_impl_glfw"
 import "shared:odin-imgui/imgui_impl_opengl3"
+import gl "vendor:OpenGL"
+import b2 "vendor:box2d"
+import "vendor:glfw"
 
-WIDTH  :: 1600
-HEIGHT :: 900 
+WIDTH :: 1600
+HEIGHT :: 900
 
-TITLE  :: "My Window!"
+TITLE :: "My Window!"
 
 GL_MAJOR_VERSION :: 4
 GL_MINOR_VERSION :: 5
 
-sample_ctx :SampleContext
+//sample_ctx :SampleContext
+state: ion_state
 
 
-update_ui :: proc(){
+update_ui :: proc(game: ^game_state) {
 
-	max_workers : i32 = 8
+    max_workers: i32 = 8
+    menu_width: f32 = 180.0
 
+    if state.draw.show_ui {
 
-	menu_width :f32= 180.0
+        if im.Begin("Tools", &state.draw.show_ui) {
 
-	if sample_ctx.draw.show_ui{
-		//im.SetNextWindowPos({f32(sample_ctx.draw.cam.width) - menu_width - 10.0, 10.0})
-		//im.SetNextWindowSize({menu_width, f32(sample_ctx.draw.cam.height) - 20.0})
+            if im.BeginTabBar("Control Tabs") {
 
-		im.Begin("Tools", &sample_ctx.draw.show_ui)
+                if im.BeginTabItem("Controls") {
+                    debug_draw := &state.draw.debug_draw
 
-		if im.BeginTabBar("Control Tabs"){
-			if im.BeginTabItem("Controls"){
-				im.PushItemWidth(100.0)
-				//im.SliderInt("Sub-steps", &sample_ctx.subStepCount, 1, 50)
-				//im.SliderFloat("Hertz", &hertz, 5.0, 120.0, "%.0f hz")
+                    im.Checkbox("Shapes", &debug_draw.drawShapes)
+                    im.Checkbox("Joints", &debug_draw.drawJoints)
+                    im.Checkbox("Joint Extras", &debug_draw.drawJointExtras)
+                    im.Checkbox("Bounds", &debug_draw.drawBounds)
+                    im.Checkbox("Contact Points", &debug_draw.drawContacts)
+                    im.Checkbox("Contact Normals", &debug_draw.drawContactNormals)
+                    im.Checkbox("Contact Inpulses", &debug_draw.drawContactImpulses)
+                    im.Checkbox("Contact Features", &debug_draw.drawContactFeatures)
+                    im.Checkbox("Friction Inpulses", &debug_draw.drawFrictionImpulses)
+                    im.Checkbox("Mass ", &debug_draw.drawMass)
+                    im.Checkbox("Body Names", &debug_draw.drawBodyNames)
+                    im.Checkbox("Graph Colors", &debug_draw.drawGraphColors)
+                    im.Checkbox("Islands ", &debug_draw.drawIslands)
 
+                    im.EndTabItem()
+                }
 
-				im.PopItemWidth()
-				im.Separator()
+                ion_editor(game)
+                im.EndTabBar()
+            }
+        }
+        im.End()
+    }
 
-				//im.Checkbox("Sleep",         &sample_ctx.enableSleep)
-				im.Checkbox("Warm Starting", &sample_ctx.enableWarmStarting)
-				im.Checkbox("Continuous",    &sample_ctx.enableContinuous)
+    /*
+    if im.Begin("Editor"){
+    im.BeginTabBar("Editor tab")
 
-				im.Separator()
-
-				debug_draw := &sample_ctx.draw.debug_draw
-
-				im.Checkbox("Shapes",    &debug_draw.drawShapes)
-				im.Checkbox("Joints",    &debug_draw.drawJoints)
-				im.Checkbox("Joint Extras",    &debug_draw.drawJointExtras)
-				im.Checkbox("Bounds",          &debug_draw.drawBounds)
-				im.Checkbox("Contact Points",  &debug_draw.drawContacts)
-				im.Checkbox("Contact Normals", &debug_draw.drawContactNormals)
-				im.Checkbox("Contact Inpulses", &debug_draw.drawContactImpulses)
-				im.Checkbox("Contact Features", &debug_draw.drawContactFeatures)
-				im.Checkbox("Friction Inpulses", &debug_draw.drawFrictionImpulses)
-				im.Checkbox("Mass ", &debug_draw.drawMass)
-				im.Checkbox("Body Names", &debug_draw.drawBodyNames)
-				im.Checkbox("Graph Colors", &debug_draw.drawGraphColors)
-				im.Checkbox("Islands ", &debug_draw.drawIslands)
-				//im.Checkbox("Counts ", &debug_draw.drawContacts)
-
-				im.EndTabItem()
-			}
-			im.EndTabBar()
-		}
-		im.End()
-	}
-
-
-
+    ion_editor_shape(game)
+    im.EndTabBar()
+    }
+    im.End()
+    */
 }
 
-main :: proc (){
+ion_editor :: proc(game: ^game_state) {
+    if im.BeginTabItem("Game") {
+        for type in game_mode {
+            if im.RadioButton(fmt.ctprint(type), game.mode == type) {
+                game.mode = type
+            }
+        }
+        im.EndTabItem()
+    }
+    curr_room := level_get_curr_room(game)
+    using curr_room
 
-	if !glfw.Init(){
-		fmt.eprintfln("GLFW has failed to load.")
-		return
-	}
+    if game.mode == .EDIT{
 
-	glfw.WindowHint(glfw.SCALE_TO_MONITOR, 1)
+        if im.BeginTabItem("Editor"){
+            if im.BeginCombo("edit mode", fmt.ctprint(game.edit_mode)){
 
-	sample_register("Bodies", "Kinematic", kinematic_create)
+                for type in interface_edit_modes{
+                    if im.Selectable(fmt.ctprint(type), game.edit_mode == type) do game.edit_mode = type
+                }
+                im.EndCombo()
+            }
 
-	sample_ctx.window = glfw.CreateWindow(WIDTH, HEIGHT, TITLE, nil, nil)
-	sample_ctx.workerCount = 2
+            if game.selected_index != -1{
+                im.Separator()
 
-	defer glfw.Terminate()
-	defer glfw.DestroyWindow(sample_ctx.window)
+                entity  := &entities[game.selected_index]
+                def_old := entity_defs[game.selected_index]
+                def     := &entity_defs[game.selected_index]
 
+                if im.CollapsingHeader("Entity Misc"){
+                    if im.BeginCombo("Entity type", fmt.ctprint(def.type)){
+                        for type in entity_type{
+                            if im.Selectable(fmt.ctprint(type)) do def.type = type
+                        }
+                        im.EndCombo()
+                    }
 
-	if sample_ctx.window == nil{
-		fmt.eprintln("GLFW has failed to load the window.")
-		return
-	}
+                    for flag in entity_flags_enum{
+                        contains := flag in def.flags
+                        if im.Checkbox(fmt.ctprint(flag), &contains) do def.flags ~= {flag}
+                    }
 
-	glfw.MakeContextCurrent(sample_ctx.window)
-	glfw.SwapInterval(1)
+                    im.SliderFloat("Scale", &def.scale, 0, 10)
 
-	gl.load_up_to(GL_MAJOR_VERSION, GL_MINOR_VERSION, glfw.gl_set_proc_address)
+                    //Static static_indexes
 
+                    if def.index != 0{
+                        //TODO: static index editor
+                    }
+                    im.InputInt("Static Index", &def.index)
+                }
+                im.Separator()
 
-	//Imgui
-	im.CHECKVERSION()
-	im.CreateContext()
+                if im.CollapsingHeader("Shape edit"){
+                    interface_shape_def_editor(game, curr_room)
+                }
+                im.Separator()
+                if im.CollapsingHeader("Body edit"){
+                    interface_body_def_editor(game, curr_room)
+                }
 
-	io := im.GetIO()
-	io.ConfigFlags += {.NavEnableKeyboard, .NavEnableGamepad}
+                if def_old != def^ do level_reload(game, curr_room)
+            }
+            im.EndTabItem()
+        }
+        if game.edit_mode == .INSERT{
+            if ion_is_pressed(.MOUSE_RIGHT){
+                fmt.println("Right click")
+                mpos :[2]f32= {f32(state.input.mouse_x), f32(state.input.mouse_y)}
+                mpos = camera_convert_screen_to_world(&state.draw.cam, mpos)
 
-	im.FontAtlas_AddFontFromFileTTF(io.Fonts, "c:\\Windows\\Fonts\\Consola.ttf", 22)
-
-	imgui_impl_glfw.InitForOpenGL(sample_ctx.window, true)
-	defer imgui_impl_glfw.Shutdown()
-	imgui_impl_opengl3.Init("#version 150")
-	defer imgui_impl_opengl3.Shutdown()
-
-
-
-	world_def := b2.DefaultWorldDef()
-	world_def.gravity.y = 9.8 
-	world_id := b2.CreateWorld(world_def)
-
-	body_def := b2.DefaultBodyDef()
-	body_def.type  = .kinematicBody
-	body_def.position.x = 2.0 
-
-	body_id := b2.CreateBody(world_id, body_def)
-
-	box       := b2.MakeBox(0.1, 1.0)
-	shape_def := b2.DefaultShapeDef()
-	shape_id  := b2.CreatePolygonShape(body_id, shape_def, box)
-
-	display_w, display_h := glfw.GetFramebufferSize(sample_ctx.window)
-	sample_ctx.draw.cam.width  = display_w
-	sample_ctx.draw.cam.height = display_h
-
-	draw_create(&sample_ctx.draw, &sample_ctx.draw.cam)
-
-
-
-	sample := sample_entries[0].create_fcn(&sample_ctx)
-
-
-	sample.draw.show_ui = true
-
-
-	fmt.println(sample_ctx.draw.cam)
-
-	gl.ClearColor(0.2, 0.2, 0.2, 1.0)
-	for !glfw.WindowShouldClose(sample_ctx.window){
-
-
-		glfw.PollEvents()
-
-		width, height := glfw.GetWindowSize(sample_ctx.window)
-		sample_ctx.draw.cam.width  = width
-		sample_ctx.draw.cam.height = height
-
-
-		display_w, display_h := glfw.GetFramebufferSize(sample_ctx.window)
-		gl.Viewport(0, 0, display_w, display_h)
-
-		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-
-		imgui_impl_opengl3.NewFrame()
-		imgui_impl_glfw.NewFrame()
-
-
-		im.NewFrame()
-
-		im.SetNextWindowPos({0, 0})
-		im.SetNextWindowSize({f32(sample_ctx.draw.cam.width), f32(sample_ctx.draw.cam.height)})
-		im.SetNextWindowBgAlpha(0)
-
-
-		{
-			kinematic_step(cast(^Kinematic)sample)
-
-			draw_flush(&sample.draw)
-
-			update_ui()
-		}
-
-		//im.ShowDemoWindow()
-
-
-		im.Render()
-
-		imgui_impl_opengl3.RenderDrawData(im.GetDrawData())
-
-		glfw.SwapBuffers(sample_ctx.window)
-	}
+                def := entity_get_default_def(mpos)
+                def.type = .NPC
+                def.shape_type = .polygonShape
+                def.flags += {.POLYGON_IS_BOX}
+                append(&entity_defs, def)
+                level_reload(game, curr_room)
+            }
+        }
+    }
 }
 
+main :: proc() {
+
+    //sample_register("Bodies", "Kinematic", kinematic_create)
+    //sample := sample_entries[0].create_fcn(&sample_ctx)
+
+    state.width = WIDTH
+    state.height = HEIGHT
+    state.title = "ion demo"
+
+    ion_init(&state)
 
 
+    game: game_state
+
+    game_init(&game)
+
+    state.draw.show_ui = true
+
+    for !ion_window_should_close(&state) {
+
+        ion_process_inputs()
+
+        ion_update_frame(&state)
 
 
+        interface_handle_input(&game)
 
 
+        game_step(&game)
 
+        draw_flush(&state.draw)
 
-
-
-
-
-
+        update_ui(&game)
+        ion_end_frame(&state)
+    }
+    ion_cleanup(&state)
+}

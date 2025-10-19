@@ -1,8 +1,7 @@
 TODO:
 
-Before handling input and making editor make the entity def stuffs
-
-1. Porting game editor and shapes creator
+1. Level serialization
+2. More editor features from rubics_2
 
 
 Abstracting the box2d render logic

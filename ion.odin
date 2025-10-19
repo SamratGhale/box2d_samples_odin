@@ -34,7 +34,9 @@ ion_state :: struct {
 
 ion_mouse_wheel_callback :: proc "c" (window : glfw.WindowHandle, x_offset, y_offset : f64){
     //context = runtime.default_context()
-    state.draw.cam.zoom += f32(y_offset)/10.0
+    //state.draw.cam.zoom -= f32(y_offset)/5.0
+    state.input.mouse_wheel_x = x_offset
+    state.input.mouse_wheel_y = y_offset
 }
 
 ion_mouse_position_callback :: proc "c" (window : glfw.WindowHandle, x_pos, y_pos: f64){
@@ -87,9 +89,18 @@ ion_init :: proc(using state: ^ion_state) {
 	gl.ClearColor(0.2, 0.2, 0.2, 1.0)
 }
 
+/*
+
+*/
+
 ion_update_frame :: proc(using state: ^ion_state) {
 
-	glfw.PollEvents()
+    input.mouse_wheel_x = 0
+    input.mouse_wheel_y = 0
+    glfw.PollEvents()
+
+	ion_process_inputs()
+
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	new_width, new_height := glfw.GetWindowSize(window)
 	draw.cam.width = new_width
@@ -202,7 +213,8 @@ ion_controller :: struct {
 
 ion_input :: struct{
     dt_for_frame  : f32,
-    mouse_x, mouse_y, mouse_z : f64,
+    mouse_wheel_x, mouse_wheel_y,  mouse_x, mouse_y, mouse_z : f64,
+
     mouse_buttons : ion_button_state,
     controllers   : [2]ion_controller,
 }

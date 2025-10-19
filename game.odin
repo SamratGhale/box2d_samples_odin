@@ -41,8 +41,6 @@ game_state :: struct {
 
 game_init :: proc(game: ^game_state){
 
-    //b2.SetLengthUnitsPerMeter(LPUM)
-
     game.curr_zone = "one"
     game.zones[game.curr_zone] = {}
     curr_zone := &game.zones[game.curr_zone]
@@ -57,22 +55,6 @@ game_init :: proc(game: ^game_state){
     curr_room := level_get_curr_room(game)
 
     level_create_new(game, curr_room)
-
-
-    /*
-    game.world_id = b2.CreateWorld(b2.DefaultWorldDef())
-
-    body_def := b2.DefaultBodyDef()
-    body_def.type = .kinematicBody
-    body_def.position.x = 2.0 * 2.0
-
-
-    game.body_id = b2.CreateBody(game.world_id, body_def)
-
-    box      := b2.MakeBox(0.1, 1.0)
-    shape_id := b2.CreatePolygonShape(game.body_id, b2.DefaultShapeDef(), box)
-    game.time = 0
-    */
 }
 
 game_step :: proc(game: ^game_state){
@@ -82,20 +64,131 @@ game_step :: proc(game: ^game_state){
 
     if ion_is_pressed(.SPACE) do game.pause = !game.pause
 
+
     if !game.pause || ion_is_pressed(.ACTION_UP)
     {
 
-        for &entity, i in &entities{
-            if i32(i) == game.selected_index{
-                pos :=  b2.Body_GetPosition(entity.body_id)
-                points_add(&state.draw.points, pos, 20.0, b2.HexColor.Plum)
-                //circle_add(&state.draw.circles, pos, 40, b2.HexColor.Green)
+
+        entity := &entities[game.selected_index]
+        pos    := b2.Body_GetPosition(entity.body_id)
+        points_add(&state.draw.points, pos, 20.0, b2.HexColor.Plum)
+
+        if game.edit_mode == .VERTICES{
+            def := &entity_defs[game.selected_index]
+
+            if def.shape_type == .polygonShape || def.shape_type == .chainSegmentShape{
+                point := small_array.get(def.vertices, game.selected_vertex_index)
+                pos += point
+            }else if def.shape_type == .capsuleShape{
+                pos += def.centers[game.selected_vertex_index]
             }
+            circle_add(&state.draw.circles, pos, 0.5, b2.HexColor.Box2DYellow)
         }
+
         game.time += 1.0/60.0
 
         b2.World_Step(world_id, 0.016,10)
     }
     b2.World_Draw(world_id, &state.draw.debug_draw)
 
+    {
+        if game.mode == .EDIT{
+        }
+    }
+
 }
+
+
+game_editor :: proc(game: ^game_state) {
+    if im.BeginTabItem("Game") {
+        for type in game_mode {
+            if im.RadioButton(fmt.ctprint(type), game.mode == type) {
+                game.mode = type
+            }
+        }
+        im.EndTabItem()
+    }
+    curr_room := level_get_curr_room(game)
+    using curr_room
+
+    if game.mode == .EDIT{
+
+        if im.BeginTabItem("Editor"){
+            if im.BeginCombo("edit mode", fmt.ctprint(game.edit_mode)){
+
+                for type in interface_edit_modes{
+                    if im.Selectable(fmt.ctprint(type), game.edit_mode == type) do game.edit_mode = type
+                }
+                im.EndCombo()
+            }
+
+            if game.selected_index != -1{
+                im.Separator()
+
+                entity  := &entities[game.selected_index]
+                def_old := entity_defs[game.selected_index]
+                def     := &entity_defs[game.selected_index]
+
+                if im.CollapsingHeader("Entity Misc"){
+                    if im.BeginCombo("Entity type", fmt.ctprint(def.type)){
+                        for type in entity_type{
+                            if im.Selectable(fmt.ctprint(type)) do def.type = type
+                        }
+                        im.EndCombo()
+                    }
+
+                    for flag in entity_flags_enum{
+                        contains := flag in def.flags
+                        if im.Checkbox(fmt.ctprint(flag), &contains) do def.flags ~= {flag}
+                    }
+
+                    im.SliderFloat("Scale", &def.scale, 0, 10)
+
+                    //Static static_indexes
+
+                    if def.index != 0{
+                        //TODO: static index editor
+                    }
+                    im.InputInt("Static Index", &def.index)
+                }
+                im.Separator()
+
+                if im.CollapsingHeader("Shape edit"){
+                    interface_shape_def_editor(game, curr_room)
+                }
+                im.Separator()
+                if im.CollapsingHeader("Body edit"){
+                    interface_body_def_editor(game, curr_room)
+                }
+
+                if def_old != def^ do level_reload(game, curr_room)
+            }
+            im.EndTabItem()
+        }
+        if game.edit_mode == .INSERT{
+            if ion_is_pressed(.MOUSE_RIGHT){
+                mpos :[2]f32= {f32(state.input.mouse_x), f32(state.input.mouse_y)}
+                mpos = camera_convert_screen_to_world(&state.draw.cam, mpos)
+
+                def := entity_get_default_def(mpos)
+                def.type = .NPC
+                def.shape_type = .polygonShape
+                def.flags += {.POLYGON_IS_BOX}
+                append(&entity_defs, def)
+                level_reload(game, curr_room)
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

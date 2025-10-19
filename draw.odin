@@ -6,12 +6,15 @@ import "base:runtime"
 import "vendor:glfw"
 import "core:fmt"
 import "core:math"
+import "core:math/linalg"
 import im "shared:odin-imgui"
+
 
 Camera :: struct {
 	center        : b2.Vec2,
 	width, height : i32,
 	zoom          : f32,
+	rotation      : f32,
 }
 
 RGBA8 :: [4]u8
@@ -72,9 +75,11 @@ camera_convert_world_to_screen :: proc(using cam : ^Camera, pw : b2.Vec2) -> b2.
 
 //Convert from world coordinates to normalized device coordinates
 // http://www.songho.ca/opengl/gl_projectionmatrix.html
-camera_build_project_matrix :: proc(using cam: ^Camera, z_bias: f32) -> [4][4]f32{
+camera_build_project_matrix :: proc(using cam: ^Camera, z_bias: f32) -> matrix[4,4]f32{
 
-	m : [4][4]f32
+    m : matrix[4, 4]f32
+
+	mat_rot := linalg.matrix4_rotate_f32(DEG2RAD * rotation, {0, 0, 1} )
 
 	ratio   := f32(width) / f32(height)
 	extents : b2.Vec2 = { zoom * ratio, zoom}
@@ -92,7 +97,7 @@ camera_build_project_matrix :: proc(using cam: ^Camera, z_bias: f32) -> [4][4]f3
 	m[3][2] = z_bias
 	m[3][3] = 1
 
-	return m
+	return m * mat_rot
 }
 
 camera_get_view_bounds :: proc(using cam: ^Camera)-> b2.AABB{
@@ -541,7 +546,6 @@ circle_flush :: proc(using circle: ^Circles, cam: ^Camera){
 	for count > 0{
 		batch_count := min(count, batch_size)
 
-		fmt.println(batch_count)
 		gl.BufferSubData(gl.ARRAY_BUFFER, 0, int(batch_count * size_of(CircleData)), &circles[base])
 		gl.DrawArraysInstanced(gl.TRIANGLES, 0, 6, batch_count)
 
@@ -1021,6 +1025,8 @@ Draw :: struct {
 
 	regular_font : im.Font,
 
+	frame_buffer : u32,
+
 }
 
 draw_aabb :: proc(using draw : ^Draw, aabb : b2.AABB, c : b2.HexColor){
@@ -1147,17 +1153,24 @@ DrawStringFcn :: proc "c" (p: b2.Vec2, s : cstring, color : b2.HexColor, ctx : r
 }
 
 draw_flush :: proc(using draw: ^Draw){
-	solid_circle_flush(&solid_circles, &cam)
+
+
+
+    solid_circle_flush(&solid_circles, &cam)
 	solid_polygon_flush(&polygons, &cam)
 	solid_capsules_flush(&solid_capsules, &cam)
 	circle_flush(&circles, &cam)
 	lines_flush(&lines, &cam)
 	points_flush(&points, &cam)
+
+
 	check_opengl()
 }
 
 draw_create :: proc(using draw: ^Draw, camera : ^Camera){
 	draw.cam = cam
+
+
 	background_create(&background)
 	points_create(&points)
 	solid_capsules_create(&solid_capsules)

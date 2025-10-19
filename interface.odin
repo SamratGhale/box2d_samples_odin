@@ -64,7 +64,6 @@ query_filter :: proc "c" (shape_id: b2.ShapeId, ctx : rawptr) -> bool{
 
     index := i32(uintptr(b2.Shape_GetUserData(shape_id)))
     game.selected_index = index
-    fmt.println(index)
     return true
 }
 
@@ -89,7 +88,6 @@ interface_edit_entity :: proc(game: ^game_state, using curr_room : ^room){
             game.copied_def = def
         }else if ion_is_down(.LEFT_CTRL) && ion_is_pressed(.V){
             def := game.copied_def^
-            pos := mpos
             def.body_def.position = mpos
 
             append(&entity_defs, def)
@@ -98,6 +96,31 @@ interface_edit_entity :: proc(game: ^game_state, using curr_room : ^room){
     }
     case .VERTICES:{
         if def.shape_type == .capsuleShape{
+            if ion_is_down(.LEFT_CTRL){
+                mpos -= def.body_def.position
+                def.centers[game.selected_vertex_index] = mpos
+                level_reload(game, curr_room)
+            }
+        }else if def.shape_type == .polygonShape || def.shape_type == .chainSegmentShape{
+            if ion_is_pressed(.MOUSE_RIGHT){
+                mpos -= def.body_def.position
+
+                small_array.push_back(&def.vertices, mpos)
+                small_array.push_back(&def.vertices, mpos)
+                level_reload(game, curr_room)
+            }else if ion_is_down(.LEFT_CTRL){
+                mpos -= def.body_def.position
+                small_array.set(&def.vertices, game.selected_vertex_index, mpos)
+                level_reload(game, curr_room)
+
+            }else if ion_is_pressed(.DELETE){
+                small_array.unordered_remove(&def.vertices, game.selected_vertex_index)
+
+                if game.selected_vertex_index >= def.vertices.len{
+                    game.selected_vertex_index -=1
+                }
+                level_reload(game, curr_room)
+            }
         }
     }
     }
@@ -108,10 +131,39 @@ interface_handle_input :: proc(using game: ^game_state){
 
     curr_room := level_get_curr_room(game)
 
+    if game.edit_mode == .VERTICES{
+
+        if state.input.mouse_wheel_y != 0{
+            def := curr_room.entity_defs[game.selected_index]
+
+            v_len : i32
+
+            if def.shape_type == .polygonShape || def.shape_type == .chainSegmentShape{
+                v_len = i32(def.vertices.len)
+            }else if def.shape_type == .capsuleShape{
+                v_len =1
+            }
+
+            if state.input.mouse_wheel_y > 0{
+                if game.selected_vertex_index >= int(v_len){
+                    game.selected_vertex_index = 0
+                }else{
+                    game.selected_vertex_index += 1
+                }
+            }else if state.input.mouse_wheel_y < 0{
+                if game.selected_vertex_index <= 0{
+                    game.selected_vertex_index = int(v_len)
+                }
+                game.selected_vertex_index -= 1
+            }
+        }
+    }else{
+        state.draw.cam.zoom -= f32(state.input.mouse_wheel_y)/5.0
+    }
+
     if ion_is_pressed(.MOUSE_LEFT){
         mpos :[2]f32= {f32(state.input.mouse_x), f32(state.input.mouse_y)}
         mpos = camera_convert_screen_to_world(&state.draw.cam, mpos)
-        fmt.println(state.draw.cam)
 
         aabb : b2.AABB = {mpos, mpos + 1}
 

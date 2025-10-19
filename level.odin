@@ -54,15 +54,15 @@ room_flags_enum :: enum u64{
 	//Clockwise if set to true,
 	//counter clockwise if set to false
 	ROTATION_CLOCKWISE,
-
-	//Rotation state
-	ROTATING,
-
-	//Only check this if ROTATING is true
-	ROTATION_COMPLETE,
 }
 
 room_flags :: bit_set[room_flags_enum; u64]
+
+rotation_state :: enum {
+    None,
+    ROTATING,
+    ROTATION_COMPLETE,
+}
 
 
 room :: struct {
@@ -88,22 +88,37 @@ room :: struct {
 	relations_serializeable  : map[static_index][dynamic]static_index_global,
 	name           : string,
 	name_buf       : [255]u8,
+
+	rot_state : rotation_state,
 }
 
 
 level_create_new :: proc(game: ^game_state, curr_room : ^room){
-    //curr_room.world_id = b2.CreateWorld(b2.DefaultWorldDef())
 
-    def := entity_get_default_def({0,0})
-    def.shape_type = .capsuleShape
-    def.flags += {.POLYGON_IS_BOX}
-    def.size = {0.4, 4.0}
-    def.scale = 1.0
+    {
+        //Capsule
+        def := entity_get_default_def({0,0})
+        def.shape_type = .polygonShape
+        def.flags += {.POLYGON_IS_BOX}
+        def.size = {8, 5.0}
+        def.scale = 1.0
 
-    def.body_def.type = .kinematicBody
-    def.body_def.position.x = 2.0 * 2.0
+        def.body_def.type = .kinematicBody
+        append(&curr_room.entity_defs, def)
+    }
 
-    append(&curr_room.entity_defs, def)
+    {
+        //Player
+        def := entity_get_default_def({0,6})
+        def.shape_type = .polygonShape
+        def.flags += {.POLYGON_IS_BOX}
+        def.size = {1, 1}
+        def.scale = .5
+        def.type = .PLAYER
+
+        def.body_def.type = .dynamicBody
+        append(&curr_room.entity_defs, def)
+    }
 
     level_reload(game, curr_room)
 }
@@ -155,9 +170,32 @@ level_reload :: proc(game: ^game_state, using curr_room : ^room){
 
 }
 
-level_get_curr_room :: proc(game: ^game_state) -> ^room{
+level_get_curr_room :: proc "c" (game: ^game_state) -> ^room{
     zone  := &game.zones[game.curr_zone]
     level := &zone.levels[zone.curr_level]
     room  := &level.rooms[level.curr_room]
     return room
 }
+
+
+level_get_all :: proc "c" (game:^game_state, index : ^static_index_global) -> (^zone, ^level, ^room, ^entity){
+    curr_zone  := &game.zones[index.zone]
+    curr_level := &curr_zone.levels[index.level]
+    curr_room  := &curr_level.rooms[index.room]
+
+    entity_index := curr_room.static_indexes[index.index]
+    entity       := &curr_room.entities[entity_index]
+
+    return curr_zone, curr_level, curr_room, entity
+}
+
+
+
+
+
+
+
+
+
+
+

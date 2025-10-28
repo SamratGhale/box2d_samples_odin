@@ -2,6 +2,7 @@
 package main
 
 import b2 "vendor:box2d"
+import "core:fmt"
 import "base:runtime"
 
 ROTATION_SPEED :: 3
@@ -16,18 +17,20 @@ ROT_LEFT_180: [2]f32 : {-50, -40}
 ROT_LEFT_90 : [2]f32 : {40, -50}
 
 ROT_LEFT : map[f32]b2.Vec2 = {
-    0   = {-50,  -50},
-    270 = {40, -50},
-    180 = {-50, 50},
-    90  = {-40,  -50},
+    0   = {-1.2,  -1.2},
+    270 = { 1.2,  -1.2},
+    180 = {-1.2,   1.2},
+    90  = {-1.2,  -1.2},
 }
 
 ROT_RIGHT : map[f32]b2.Vec2 = {
-    0   = {50,  -50},
-    270 = {40, 50},
-    180 = {50, 40},
-    90  = {-40,  50},
+    0   = {1.2,  -1.2},
+    270 = {1.2,   1.2},
+    180 = {1.2,   1.2},
+    90  = {-1.2,  1.2},
 }
+
+bounding_box_filter := b2.DefaultQueryFilter()
 
 overlap_callback_left :: proc "c" (shape_id: b2.ShapeId, ctx : rawptr) -> bool{
     game := cast(^game_state)ctx
@@ -54,6 +57,7 @@ overlap_callback_right :: proc "c" (shape_id: b2.ShapeId, ctx : rawptr) -> bool{
 }
 
 player_collision_callback :: proc "c" (shape_id: b2.ShapeId, ctx: rawptr) -> bool{
+
     context = runtime.default_context()
     game   := cast(^game_state)ctx
 
@@ -110,8 +114,257 @@ player_update_rotation :: proc(game: ^game_state, curr_room: ^room, player: ^ent
     if gaps & player.flags != {}{
         curr_room.rot_state = .ROTATING
 
+        //Maybe set rotation to every room
+        rot := state.draw.cam.rotation
+
+        pos := b2.Body_GetPosition(player.body_id)
+
+        if .GAP_RIGHT in player.flags{
+            pos += ROT_RIGHT[rot]
+
+            switch rot{
+            case 0, 270:
+                game.rot_dir = .COUNTER_CLOCKWISE
+            case 180, 90:
+                game.rot_dir = .CLOCKWISE
+            }
+        }else{
+            pos += ROT_LEFT[rot]
+
+            switch rot{
+            case 0, 270:
+                game.rot_dir = .CLOCKWISE
+            case 180, 90:
+                game.rot_dir = .COUNTER_CLOCKWISE
+            }
+
+        }
+
+        b2.Body_SetTransform(player.body_id, pos, b2.Body_GetRotation(player.body_id))
+        b2.Body_SetLinearVelocity(player.body_id, {})
     }
 }
+
+player_get_rotated_asdw :: proc(game: ^game_state, curr_room : ^room) -> (asdwjump : [5]ion_button){
+
+    switch state.draw.cam.rotation{
+    case 0:
+        asdwjump = {.A, .S, .D, .W, .W}
+    case 90:
+        asdwjump = {.S, .D, .W, .A, .W}
+    case 270:
+        asdwjump = {.W, .A, .S, .D, .W}
+    case 180:
+        asdwjump = {.D, .W, .A, .S, .W}
+    }
+    return
+}
+
+
+player_update_jump :: proc(game: ^game_state, curr_room : ^room, using player: ^entity){
+    normal  : b2.Vec2
+    c_shape : b2.ShapeId
+
+    rot           := state.draw.cam.rotation
+    contacts_data : [20]b2.ContactData
+    contacts      := b2.Body_GetContactData(body_id, contacts_data[:])
+
+    for contact in contacts{
+        normal = contact.manifold.normal
+        c_shape = contact.shapeIdA
+
+        if contact.shapeIdB != shape_id{
+            normal *= 1
+            c_shape = contact.shapeIdB
+        }
+
+        switch rot{
+        case 0:
+            if (abs(normal.y) > abs(normal.x)){
+                if normal.y > 0{
+                    curr_room.ground_id = c_shape
+                    flags -= {.JUMPING}
+                    break
+                }
+            }
+        case 180:
+            if (abs(normal.y) > abs(normal.x)){
+                if normal.y < 0{
+                    curr_room.ground_id = c_shape
+                    flags -= {.JUMPING}
+                    break
+                }
+            }
+        case 90:
+            if (abs(normal.x) > abs(normal.y)){
+                if normal.x > 0{
+                    curr_room.ground_id = c_shape
+                    flags -= {.JUMPING}
+                    break
+                }
+            }
+        case 270:
+            if (abs(normal.x) > abs(normal.y)){
+                if normal.x < 0{
+                    curr_room.ground_id = c_shape
+                    flags -= {.JUMPING}
+                    break
+                }
+            }
+        }
+    }
+
+    //Basically if there is floor with no NO_FLIP in flags remote gap
+
+    if .JUMPING not_in flags{
+        flags += {.GAP_LEFT, .GAP_RIGHT }
+
+        if curr_room.ground_id != b2.nullShapeId{
+            floor_index := u32(uintptr(b2.Shape_GetUserData(curr_room.ground_id)))
+
+            if floor_index > 0 && floor_index < u32(len(curr_room.entities)){
+                floor := &curr_room.entities[floor_index]
+
+                if .NO_FLIP in floor.flags{
+                    flags -= {.GAP_LEFT, .GAP_RIGHT}
+                }
+            }
+        }
+    }
+}
+
+player_get_bounding_box :: proc(rot: f32, p: b2.Vec2) -> (left, right : b2.AABB){
+
+    //Get rotation of the player and rotate the aabbs
+
+    right = {{0.7, -1}, {1, 1}}
+    left = {{-1, -1}, {-0.7, 1}}
+
+    switch (int(rot) % 360) {
+    case 270, -90:
+        right.lowerBound = swizzle(right.lowerBound, 1, 0)
+        right.upperBound = swizzle(right.upperBound, 1, 0)
+        left.lowerBound  = swizzle(left.lowerBound, 1, 0)
+        left.upperBound  = swizzle(left.upperBound, 1, 0)
+        right.lowerBound.x += 1
+        right.upperBound.x += 1
+        left.lowerBound.x  += 1
+        left.upperBound.x  += 1
+    case 90, -270:
+        right.lowerBound = swizzle(right.lowerBound, 1, 0)
+        left.lowerBound  = swizzle(left.lowerBound, 1, 0)
+        right.upperBound = swizzle(right.upperBound, 1, 0)
+        left.upperBound  = swizzle(left.upperBound, 1, 0)
+    case 180, -180:
+        right.lowerBound.y += 1
+        left.lowerBound.y  += 1
+        right.upperBound.y += 1
+        left.upperBound.y  += 1
+    }
+
+    right.lowerBound  += p
+    right.upperBound  += p
+    left.lowerBound   += p
+    left.upperBound   += p
+
+    return
+}
+
+player_update_bounding_box :: proc(game: ^game_state, curr_room: ^room, player: ^entity){
+    if curr_room.ground_id != b2.nullShapeId{
+        pos := b2.Body_GetPosition(player.body_id)
+
+        ground_index := u32(uintptr(b2.Shape_GetUserData(curr_room.ground_id)))
+        ground       := &curr_room.entities[ground_index]
+
+        aabb_left, aabb_right := player_get_bounding_box(state.draw.cam.rotation, pos)
+
+        /*
+        points_left  : [4]b2.Vec2
+        points_left[0] = {aabb_left.lowerBound.x, aabb_left.upperBound.y}
+        points_left[1] = {aabb_left.upperBound.x, aabb_left.upperBound.y}
+        points_left[2] = {aabb_left.upperBound.x, aabb_left.lowerBound.y}
+        points_left[3] = {aabb_left.lowerBound.x, aabb_left.lowerBound.y}
+
+
+        DrawPolygonFcn(&points_left[0], 4, b2.HexColor.Black, &state.draw)
+
+        points_right  : [4]b2.Vec2
+        points_right[0] = {aabb_right.lowerBound.x, aabb_right.upperBound.y}
+        points_right[1] = {aabb_right.upperBound.x, aabb_right.upperBound.y}
+        points_right[2] = {aabb_right.upperBound.x, aabb_right.lowerBound.y}
+        points_right[3] = {aabb_right.lowerBound.x, aabb_right.lowerBound.y}
+
+        DrawPolygonFcn(&points_right[0], 4, b2.HexColor.Black, &state.draw)
+        */
+
+        result := b2.World_OverlapAABB(curr_room.world_id, aabb_right, bounding_box_filter, overlap_callback_right, game)
+        result  = b2.World_OverlapAABB(curr_room.world_id, aabb_left,  bounding_box_filter, overlap_callback_left,  game)
+    }
+}
+
+//Handles movement
+player_update_movement :: proc(game: ^game_state, curr_room : ^room, player: ^entity){
+    rot := state.draw.cam.rotation
+    velocity : b2.Vec2
+    current_vel := b2.Body_GetLinearVelocity(player.body_id)
+    asdw        := player_get_rotated_asdw(game, curr_room)
+
+    a, s, d, w, jump := asdw[0], asdw[1], asdw[2], asdw[3], asdw[4]
+
+    if ion_is_down(d) do velocity.x += 10
+    if ion_is_down(a) do velocity.x -= 10
+    if ion_is_down(w) do velocity.y += 10
+    if ion_is_down(s) do velocity.y -= 10
+
+    if ion_is_down(jump) && .JUMPING not_in player.flags{
+        if rot == 0 || rot == 180{
+            velocity  *= {0, 4}
+        }else{
+            velocity  *= {4, 0}
+        }
+
+        player.flags += {.JUMPING}
+    }else if ion_is_down(jump){
+        velocity = {}
+    }
+
+    if velocity != {0, 0}{
+        if velocity.x == 0{
+            velocity.x = current_vel.x
+        }
+        if velocity.y == 0{
+            velocity.y = current_vel.y
+        }
+
+        b2.Body_SetLinearVelocity(player.body_id, velocity)
+    }
+}
+
+
+player_update :: proc(game : ^game_state, curr_room : ^room, player: ^entity){
+    player_update_jump(game, curr_room, player)
+
+    if .JUMPING not_in player.flags do player_update_bounding_box(game, curr_room, player)
+
+
+    //Update collisions
+    {
+        pos := b2.Body_GetPosition(player.body_id)
+        aabb : b2.AABB = {lowerBound = pos, upperBound = pos + 1}
+
+        filter := b2.DefaultQueryFilter()
+        filter.maskBits ~= u64(entity_type.BOUNDING_BOX)
+        filter.maskBits ~= u64(entity_type.PLAYER)
+
+        tree := b2.World_OverlapAABB(curr_room.world_id, aabb, filter, player_collision_callback, game)
+    }
+    player_update_movement(game, curr_room, player)
+
+    if .JUMPING not_in player.flags do player_update_rotation(game, curr_room, player)
+}
+
+
 
 
 

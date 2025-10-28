@@ -8,8 +8,8 @@ import gl "vendor:OpenGL"
 import b2 "vendor:box2d"
 import "vendor:glfw"
 
-WIDTH :: 1600
-HEIGHT :: 900
+WIDTH :: 1000
+HEIGHT :: 1000
 
 TITLE :: "My Window!"
 
@@ -88,7 +88,6 @@ main :: proc() {
         draw_flush(&state.draw)
 
         update_ui(&game)
-
 
 
         ion_end_frame(&state)

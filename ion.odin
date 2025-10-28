@@ -70,6 +70,7 @@ ion_init :: proc(using state: ^ion_state) {
 	im.CreateContext()
 
 	io := im.GetIO()
+	im.FontAtlas_AddFontFromFileTTF(io.Fonts, "./Merriweather-Regular.ttf", 15)
 	io.ConfigFlags += {.NavEnableKeyboard, .NavEnableGamepad, .DpiEnableScaleFonts,  .DockingEnable, .ViewportsEnable}
 
 	imgui_impl_glfw.InitForOpenGL(window, true)
@@ -172,10 +173,10 @@ ion_button_state :: struct{
 }
 
 ion_button :: enum {
-    MOVE_UP,
-    MOVE_DOWN,
-    MOVE_LEFT,
-    MOVE_RIGHT,
+    W,
+    S,
+    A,
+    D,
     ACTION_UP,
     ACTION_DOWN,
     ACTION_LEFT,
@@ -263,10 +264,10 @@ ion_process_inputs :: proc(){
 
     using glfw
 
-    ion_process_keyboard_input(&buttons[.MOVE_UP],GetKey(window, KEY_W) == PRESS)
-    ion_process_keyboard_input(&buttons[.MOVE_DOWN], GetKey(window, KEY_S) == PRESS)
-    ion_process_keyboard_input(&buttons[.MOVE_LEFT],GetKey(window, KEY_A) == PRESS)
-    ion_process_keyboard_input(&buttons[.MOVE_RIGHT],GetKey(window, KEY_D) == PRESS)
+    ion_process_keyboard_input(&buttons[.W],GetKey(window, KEY_W) == PRESS)
+    ion_process_keyboard_input(&buttons[.S], GetKey(window, KEY_S) == PRESS)
+    ion_process_keyboard_input(&buttons[.A],GetKey(window, KEY_A) == PRESS)
+    ion_process_keyboard_input(&buttons[.D],GetKey(window, KEY_D) == PRESS)
     ion_process_keyboard_input(&buttons[.ACTION_UP ],GetKey(window, KEY_UP) == PRESS)
     ion_process_keyboard_input(&buttons[.ACTION_DOWN],GetKey(window, KEY_DOWN) == PRESS)
     ion_process_keyboard_input(&buttons[.ACTION_LEFT],GetKey(window, KEY_LEFT) == PRESS)

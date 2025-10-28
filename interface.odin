@@ -335,19 +335,3 @@ interface_shape_def_editor :: proc(game: ^game_state, curr_room : ^room){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

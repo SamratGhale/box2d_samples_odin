@@ -952,6 +952,7 @@ solid_polygon_add :: proc(using polygon: ^SolidPolygon, transform : b2.Transform
 	ps := cast([^]b2.Vec2)&data.p1
 
 	for i in 0..<count{
+    	//fmt.print(points[i])
 		ps[i] = points[i]
 	}
 
@@ -1057,9 +1058,10 @@ DrawPolygonFcn ::proc "c" (vertices: [^]b2.Vec2, vertexCount : i32, color: b2.He
 
 DrawSolidPolygonFcn :: proc "c" (transform : b2.Transform, vertices: [^]b2.Vec2, vertexCount: i32, radius: f32, color: b2.HexColor, ctx: rawptr){
 
-	draw    : ^Draw = cast(^Draw)ctx
-	context = runtime.default_context()
 
+    context = runtime.default_context()
+
+	draw    : ^Draw = cast(^Draw)ctx
 	solid_polygon_add(&draw.polygons, transform, vertices, vertexCount, radius, color)
 }
 

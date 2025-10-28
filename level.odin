@@ -90,17 +90,17 @@ room :: struct {
 	name_buf       : [255]u8,
 
 	rot_state : rotation_state,
+	zoom           : f32,
 }
 
 
 level_create_new :: proc(game: ^game_state, curr_room : ^room){
-
     {
         //Capsule
         def := entity_get_default_def({0,0})
         def.shape_type = .polygonShape
         def.flags += {.POLYGON_IS_BOX}
-        def.size = {8, 5.0}
+        def.size = {8, 8}
         def.scale = 1.0
 
         def.body_def.type = .kinematicBody
@@ -108,17 +108,20 @@ level_create_new :: proc(game: ^game_state, curr_room : ^room){
     }
 
     {
+
         //Player
-        def := entity_get_default_def({0,6})
+        def := entity_get_default_def({0,20})
         def.shape_type = .polygonShape
-        def.flags += {.POLYGON_IS_BOX}
+        def.flags += {.POLYGON_IS_BOX, .JUMPING}
         def.size = {1, 1}
         def.scale = .5
+        def.body_def.gravityScale = 0.1
         def.type = .PLAYER
 
         def.body_def.type = .dynamicBody
         append(&curr_room.entity_defs, def)
     }
+    curr_room.zoom = 20
 
     level_reload(game, curr_room)
 }
@@ -142,7 +145,12 @@ level_reload :: proc(game: ^game_state, using curr_room : ^room){
 
     for def, i in entity_defs{
         new_entity := entity_create_new(def, world_id, i32(i))
+
         append(&entities, new_entity)
+
+        if def.type == .PLAYER{
+            curr_room.player_index = i32(i)
+        }
     }
 
     clear(&relations_serializeable)

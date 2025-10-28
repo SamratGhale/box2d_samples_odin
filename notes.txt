@@ -1,7 +1,9 @@
 TODO:
 
-1. Level serialization
-2. More editor features from rubics_2
+
+1. Refactor everything
+3. Level serialization
+4. More editor features from rubics_2
 
 
 Abstracting the box2d render logic

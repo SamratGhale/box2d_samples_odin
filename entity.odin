@@ -1,7 +1,9 @@
+#+feature dynamic-literals
 package main
 
 import b2 "vendor:box2d"
 import array "core:container/small_array"
+import "core:math"
 import "core:fmt"
 
 /*
@@ -74,6 +76,14 @@ entity_def :: struct {
     vertices     : array.Small_Array(b2.MAX_POLYGON_VERTICES, b2.Vec2),
     name_buf     : [255]u8,
 
+}
+
+gravity_map : map[f32]b2.Vec2 = {
+    0   = {0, -9.8 * LPUM},
+    90  = {-9.8    * LPUM, 0},
+    180 = {0,  9.8 * LPUM},
+    270 = {9.8     * LPUM, 0},
+    360 = {0, -9.8 * LPUM},
 }
 
 //Returns a default entity def which contains default value for all the shapes
@@ -190,3 +200,68 @@ entity_create_new :: proc(def : entity_def, world_id: b2.WorldId, entity_len : i
 	b2.Shape_SetUserData(new_entity.shape_id, rawptr(uintptr(entity_len)))
 	return new_entity
 }
+
+entities_update_while_rotating :: proc(game: ^game_state, curr_room : ^room, player: ^entity){
+    if curr_room.rot_state == .ROTATION_COMPLETE{
+        curr_room.rot_state = .None
+        return
+    }
+
+    if game.rot_dir == .CLOCKWISE{
+        state.draw.cam.rotation -= ROTATION_SPEED
+    }else{
+        state.draw.cam.rotation += ROTATION_SPEED
+    }
+
+    degree : f32 = -ROTATION_SPEED
+
+    if game.rot_dir == .CLOCKWISE do degree = ROTATION_SPEED
+
+    angle : f32 = DEG2RAD * degree
+
+    rot := b2.MakeRot((360 - state.draw.cam.rotation) * DEG2RAD)
+
+    for &entity in &curr_room.entities{
+        if .NO_ROTATION in entity.flags{
+       	    current_pos := b2.Body_GetPosition(entity.body_id)
+            rotated_x := current_pos.x * math.cos(angle) - current_pos.y * math.sin(angle)
+            rotated_y := current_pos.x * math.sin(angle) + current_pos.y * math.cos(angle)
+            b2.Body_SetTransform(entity.body_id, {rotated_x, rotated_y}, rot)
+        }
+    }
+
+    //Check if rotation complete
+    curr_rot := state.draw.cam.rotation
+    if int(abs(curr_rot)) % 90 == 0{
+        if curr_rot < 0 do state.draw.cam.rotation = 360 + curr_rot
+
+        curr_rot = state.draw.cam.rotation
+
+        //Set gravity according to the rotation
+        gravity := gravity_map[curr_rot]
+        b2.World_SetGravity(curr_room.world_id, gravity)
+        player.flags += {.JUMPING}
+        curr_room.rot_state = .ROTATION_COMPLETE
+        state.draw.cam.rotation = f32(int(abs(state.draw.cam.rotation)) % 360)
+    }
+}
+
+
+entities_update :: proc(game: ^game_state, curr_room : ^room){
+    for &entity in &curr_room.entities{
+        if entity.type == .PLAYER{
+            player_update(game, curr_room, &entity)
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,11 @@
 #+feature dynamic-literals
 package main
 
+/*
+    Most of the function here are either callback functions declared by box2d
+    or funtion that takes player as arguement
+*/
+
 import b2 "vendor:box2d"
 import "core:fmt"
 import "base:runtime"
@@ -56,6 +61,13 @@ overlap_callback_right :: proc "c" (shape_id: b2.ShapeId, ctx : rawptr) -> bool{
     return true
 }
 
+/*
+    This is the main function where game logic is defined
+    What happens when player collides with which entity
+
+    NOTE: maybe create different callback for different entity type,
+          creating different callback
+*/
 player_collision_callback :: proc "c" (shape_id: b2.ShapeId, ctx: rawptr) -> bool{
 
     context = runtime.default_context()
@@ -110,6 +122,11 @@ player_collision_callback :: proc "c" (shape_id: b2.ShapeId, ctx: rawptr) -> boo
 
 gaps := entity_flags{.GAP_LEFT, .GAP_RIGHT}
 
+/*
+    Check if player is on edge and update player position according to it
+    It also starts rotating the level
+*/
+
 player_update_rotation :: proc(game: ^game_state, curr_room: ^room, player: ^entity){
     if gaps & player.flags != {}{
         curr_room.rot_state = .ROTATING
@@ -145,7 +162,10 @@ player_update_rotation :: proc(game: ^game_state, curr_room: ^room, player: ^ent
     }
 }
 
-player_get_rotated_asdw :: proc(game: ^game_state, curr_room : ^room) -> (asdwjump : [5]ion_button){
+/*
+    Gives which key to use as asdw according to the curr_room's rotation
+*/
+player_get_rotated_asdw :: proc(curr_room : ^room) -> (asdwjump : [5]ion_button){
 
     switch state.draw.cam.rotation{
     case 0:
@@ -161,6 +181,11 @@ player_get_rotated_asdw :: proc(game: ^game_state, curr_room : ^room) -> (asdwju
 }
 
 
+/*
+    Updates the jumping state of player and ground shape_id
+    Gets all the collision of player and goes thru it to set the ground_id
+    Also sets the gaps accodring to shape_id type
+*/
 player_update_jump :: proc(game: ^game_state, curr_room : ^room, using player: ^entity){
     normal  : b2.Vec2
     c_shape : b2.ShapeId
@@ -233,6 +258,10 @@ player_update_jump :: proc(game: ^game_state, curr_room : ^room, using player: ^
     }
 }
 
+/*
+    The bounding box is a way to determine if the player is one the edge of a entity or not
+    It is basically two rectangle on both ends of the player, we do AABB collsion on the world
+*/
 player_get_bounding_box :: proc(rot: f32, p: b2.Vec2) -> (left, right : b2.AABB){
 
     //Get rotation of the player and rotate the aabbs
@@ -304,24 +333,26 @@ player_update_bounding_box :: proc(game: ^game_state, curr_room: ^room, player: 
 }
 
 //Handles movement
-player_update_movement :: proc(game: ^game_state, curr_room : ^room, player: ^entity){
+player_handle_movement :: proc(curr_room : ^room, player: ^entity){
     rot := state.draw.cam.rotation
     velocity : b2.Vec2
-    current_vel := b2.Body_GetLinearVelocity(player.body_id)
-    asdw        := player_get_rotated_asdw(game, curr_room)
+    curr_vel := b2.Body_GetLinearVelocity(player.body_id)
+    asdw     := player_get_rotated_asdw(curr_room)
 
     a, s, d, w, jump := asdw[0], asdw[1], asdw[2], asdw[3], asdw[4]
 
+    //Basic movement
     if ion_is_down(d) do velocity.x += 10
     if ion_is_down(a) do velocity.x -= 10
     if ion_is_down(w) do velocity.y += 10
     if ion_is_down(s) do velocity.y -= 10
 
+    //If we're jumping then increase the velocity
     if ion_is_down(jump) && .JUMPING not_in player.flags{
         if rot == 0 || rot == 180{
-            velocity  *= {0, 4}
+            velocity  *= {0, 3}
         }else{
-            velocity  *= {4, 0}
+            velocity  *= {3, 0}
         }
 
         player.flags += {.JUMPING}
@@ -330,11 +361,12 @@ player_update_movement :: proc(game: ^game_state, curr_room : ^room, player: ^en
     }
 
     if velocity != {0, 0}{
+        //This does the job of not being about to move linearly while jumping
         if velocity.x == 0{
-            velocity.x = current_vel.x
+            velocity.x = curr_vel.x
         }
         if velocity.y == 0{
-            velocity.y = current_vel.y
+            velocity.y = curr_vel.y
         }
 
         b2.Body_SetLinearVelocity(player.body_id, velocity)
@@ -342,6 +374,16 @@ player_update_movement :: proc(game: ^game_state, curr_room : ^room, player: ^en
 }
 
 
+/*
+    The main function of this file
+    It is called on game.odin if the entity type is player
+
+    1. updates the player jumping statestate
+    2. update bounding box
+    3. update player collision
+    4. handle inputs for player movement
+    5. update player rotation
+*/
 player_update :: proc(game : ^game_state, curr_room : ^room, player: ^entity){
     player_update_jump(game, curr_room, player)
 
@@ -359,7 +401,7 @@ player_update :: proc(game : ^game_state, curr_room : ^room, player: ^entity){
 
         tree := b2.World_OverlapAABB(curr_room.world_id, aabb, filter, player_collision_callback, game)
     }
-    player_update_movement(game, curr_room, player)
+    player_handle_movement(curr_room, player)
 
     if .JUMPING not_in player.flags do player_update_rotation(game, curr_room, player)
 }

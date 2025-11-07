@@ -3,7 +3,9 @@ package main
 import "core:fmt"
 import im "shared:odin-imgui"
 import "shared:odin-imgui/imgui_impl_glfw"
+import "core:os"
 import "shared:odin-imgui/imgui_impl_opengl3"
+import "core:encoding/json"
 import gl "vendor:OpenGL"
 import b2 "vendor:box2d"
 import "vendor:glfw"
@@ -30,7 +32,6 @@ update_ui :: proc(game: ^game_state) {
         if im.Begin("Tools", &state.draw.show_ui) {
 
             if im.BeginTabBar("Control Tabs") {
-
                 if im.BeginTabItem("Controls") {
                     debug_draw := &state.draw.debug_draw
 
@@ -54,6 +55,8 @@ update_ui :: proc(game: ^game_state) {
                 }
 
                 game_editor(game)
+                interface_edit_levels(game)
+
                 im.EndTabBar()
             }
         }
@@ -76,6 +79,8 @@ main :: proc() {
 
     game_init(&game)
 
+
+
     state.draw.show_ui = true
 
     for !ion_window_should_close(&state) {
@@ -88,7 +93,6 @@ main :: proc() {
         draw_flush(&state.draw)
 
         update_ui(&game)
-
 
         ion_end_frame(&state)
     }

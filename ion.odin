@@ -45,6 +45,15 @@ ion_mouse_position_callback :: proc "c" (window : glfw.WindowHandle, x_pos, y_po
     state.input.mouse_y = y_pos
 }
 
+/*
+When a json file is droppped validate it and add to the game
+*/
+ion_glfw_drop_callback :: proc "c" (window: glfw.WindowHandle, count: i32, paths: [^]cstring){
+    context = runtime.default_context()
+
+    fmt.println(paths[0])
+}
+
 ion_init :: proc(using state: ^ion_state) {
 
 	assert(glfw.Init() == true)
@@ -57,8 +66,9 @@ ion_init :: proc(using state: ^ion_state) {
 	if window == nil {
 		fmt.eprintln("GLFW has failed to load the window.")
 	}
-	glfw.SetScrollCallback(window, ion_mouse_wheel_callback)
+	glfw.SetScrollCallback(window,    ion_mouse_wheel_callback)
 	glfw.SetCursorPosCallback(window, ion_mouse_position_callback)
+	glfw.SetDropCallback(window,      ion_glfw_drop_callback)
 
 	glfw.MakeContextCurrent(window)
 	glfw.SwapInterval(1)
@@ -70,7 +80,7 @@ ion_init :: proc(using state: ^ion_state) {
 	im.CreateContext()
 
 	io := im.GetIO()
-	im.FontAtlas_AddFontFromFileTTF(io.Fonts, "./Merriweather-Regular.ttf", 15)
+	im.FontAtlas_AddFontFromFileTTF(io.Fonts, "./UbuntuSansMono-Regular.ttf", 15)
 	io.ConfigFlags += {.NavEnableKeyboard, .NavEnableGamepad, .DpiEnableScaleFonts,  .DockingEnable, .ViewportsEnable}
 
 	imgui_impl_glfw.InitForOpenGL(window, true)
@@ -149,13 +159,6 @@ ion_cleanup :: proc(using state: ^ion_state) {
 ion_window_should_close :: proc(state: ^ion_state) -> b32{
     return glfw.WindowShouldClose(state.window)
 }
-
-
-
-
-
-
-
 
 //Button stuffs
 ion_button_state :: struct{

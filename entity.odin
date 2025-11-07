@@ -27,7 +27,7 @@ entity_flags :: bit_set[entity_flags_enum]
 
 static_index_global :: struct {
 	index  : i32,
-	zone, level, room : string,
+	level, room : string,
 	offset : b2.Vec2,
 }
 
@@ -74,7 +74,7 @@ entity_def :: struct {
 
     //For polygons and chain
     vertices     : array.Small_Array(b2.MAX_POLYGON_VERTICES, b2.Vec2),
-    name_buf     : [255]u8,
+    name_buf     : [255]u8 `fmt:"-" json:"-"`,
 
 }
 

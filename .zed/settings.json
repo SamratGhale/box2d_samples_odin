@@ -1,5 +1,20 @@
-// Folder-specific settings
+{// Folder-specific settings
 //
-// For a full list of overridable settings, and general information on folder-specific settings,
-// see the documentation: https://zed.dev/docs/configuring-zed#settings-files
-{}
+// For a full list of overridable settings, and general information on folder-specific settings,//zed.dev/docs/configuring-zed#settings-files
+  "indent_guides": {
+    "coloring": "indent_aware",
+    "background_coloring": "indent_aware"
+  },
+  "languages": {
+    "Odin": {
+      "inlay_hints": {
+        "show_background": true
+      },
+      "show_wrap_guides": true
+    }
+  },
+  "terminal": {
+    "shell": "system"
+  },
+  "show_wrap_guides": false
+}

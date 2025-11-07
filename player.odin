@@ -43,7 +43,7 @@ overlap_callback_left :: proc "c" (shape_id: b2.ShapeId, ctx : rawptr) -> bool{
     room := level_get_curr_room(game)
 
     if room != nil{
-        player := &room.entities[room.player_index]
+        player       := &room.entities[room.player_index]
         player.flags -= {.GAP_LEFT}
     }
     return true
@@ -55,7 +55,7 @@ overlap_callback_right :: proc "c" (shape_id: b2.ShapeId, ctx : rawptr) -> bool{
     room := level_get_curr_room(game)
 
     if room != nil{
-        player := &room.entities[room.player_index]
+        player       := &room.entities[room.player_index]
         player.flags -= {.GAP_RIGHT}
     }
     return true
@@ -99,13 +99,12 @@ player_collision_callback :: proc "c" (shape_id: b2.ShapeId, ctx: rawptr) -> boo
         indexes := &curr_room.relations[entity.index]
 
         for &index in indexes{
-            new_zone, new_level, new_room, new_entity := level_get_all(game, &index)
+            new_level, new_room, new_entity := level_get_all(game, &index)
 
             //Teleport
             if entity.type == .DOOR{
                 game.selected_index = 0
-                game.curr_zone = index.zone
-                new_zone.curr_level = index.level
+                game.curr_level = index.level
                 new_level.curr_room = index.room
 
                 player := &new_room.entities[new_room.player_index]
@@ -199,7 +198,7 @@ player_update_jump :: proc(game: ^game_state, curr_room : ^room, using player: ^
         c_shape = contact.shapeIdA
 
         if contact.shapeIdB != shape_id{
-            normal *= 1
+            normal *= -1
             c_shape = contact.shapeIdB
         }
 
@@ -308,7 +307,6 @@ player_update_bounding_box :: proc(game: ^game_state, curr_room: ^room, player: 
 
         aabb_left, aabb_right := player_get_bounding_box(state.draw.cam.rotation, pos)
 
-        /*
         points_left  : [4]b2.Vec2
         points_left[0] = {aabb_left.lowerBound.x, aabb_left.upperBound.y}
         points_left[1] = {aabb_left.upperBound.x, aabb_left.upperBound.y}
@@ -325,7 +323,6 @@ player_update_bounding_box :: proc(game: ^game_state, curr_room: ^room, player: 
         points_right[3] = {aabb_right.lowerBound.x, aabb_right.lowerBound.y}
 
         DrawPolygonFcn(&points_right[0], 4, b2.HexColor.Black, &state.draw)
-        */
 
         result := b2.World_OverlapAABB(curr_room.world_id, aabb_right, bounding_box_filter, overlap_callback_right, game)
         result  = b2.World_OverlapAABB(curr_room.world_id, aabb_left,  bounding_box_filter, overlap_callback_left,  game)

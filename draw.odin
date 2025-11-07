@@ -126,7 +126,7 @@ check_opengl :: proc(){
 background_create :: proc(using back: ^Background){
 
 	ok : bool
-	program, ok = gl.load_shaders_file("shaders/background.vs", "shaders/background.fs")
+	program, ok = gl.load_shaders_source(#load("shaders/background.vs"), #load("shaders/background.fs"))
 	check_opengl()
 	uniforms   = gl.get_uniforms_from_program(program)
 
@@ -174,7 +174,7 @@ background_draw :: proc( using back: ^Background, cam : ^Camera){
 	gl.Uniform1f(uniforms["time"].location, time)
 	gl.Uniform2f(uniforms["resolution"].location, f32(cam.width), f32(cam.height))
 
-	gl.Uniform3f(uniforms["baseColor"].location, 0.2, 0.2, 0.2)
+	gl.Uniform3f(uniforms["baseColor"].location, 0.8, 0.9, 0.2)
 
 	gl.BindVertexArray(vao)
 	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
@@ -457,7 +457,7 @@ circle_create :: proc(using circle : ^Circles){
 
 	batch_size := 2048
 
-	program, _  = gl.load_shaders("shaders/circle.vs", "shaders/circle.fs")
+	program, _  = gl.load_shaders_source(#load("shaders/circle.vs"), #load("shaders/circle.fs"))
 	check_opengl()
 	uniforms = gl.get_uniforms_from_program(program)
 
@@ -579,7 +579,7 @@ SolidCircle :: struct {
 
 
 solid_circle_create :: proc(using circle: ^SolidCircle){
-	program,_ = gl.load_shaders("shaders/solid_circle.vs", "shaders/solid_circle.fs")
+	program,_ = gl.load_shaders_source(#load("shaders/solid_circle.vs"), #load("shaders/solid_circle.fs"))
 	uniforms  = gl.get_uniforms_from_program(program)
 
 	gl.GenVertexArrays(1, &vao)
@@ -710,7 +710,7 @@ SolidCapsules :: struct {
 //Draw capsules using SDF-based shaders
 
 solid_capsules_create :: proc(using capsule : ^SolidCapsules){
-	program, _  = gl.load_shaders("shaders/solid_capsule.vs", "shaders/solid_capsule.fs")
+	program, _  = gl.load_shaders_source(#load("shaders/solid_capsule.vs"), #load("shaders/solid_capsule.fs"))
 	check_opengl()
 	uniforms    = gl.get_uniforms_from_program(program)
 
@@ -869,7 +869,7 @@ SolidPolygon :: struct {
 
 
 solid_polygon_create :: proc(using polygon : ^SolidPolygon){
-	program, _ = gl.load_shaders("shaders/solid_polygons.vs", "shaders/solid_polygons.fs")
+	program, _ = gl.load_shaders_source(#load("shaders/solid_polygons.vs"), #load("shaders/solid_polygons.fs"))
 
 	batch_size : i32 = 512
 

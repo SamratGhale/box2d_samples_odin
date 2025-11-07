@@ -17,8 +17,8 @@ interface_state :: struct {
     selected_index        : i32,
     edit_mode             : interface_edit_modes,
     selected_vertex_index : int,
-    copied_def        : ^entity_def,
-    curr_static_index : static_index_global,
+    copied_def            : ^entity_def `json:"-"`,
+    curr_static_index     : static_index_global,
 }
 
 saturate :: proc (f : f32)-> f32 {
@@ -57,7 +57,6 @@ u32_to_float4 :: proc(color : u32) -> [4]f32{
 
 
 query_filter :: proc "c" (shape_id: b2.ShapeId, ctx : rawptr) -> bool{
-
     context = runtime.default_context()
 
     game := cast(^game_state)ctx
@@ -322,6 +321,20 @@ interface_shape_def_editor :: proc(game: ^game_state, curr_room : ^room){
         im.InputInt("Group index", &groupIndex)
         im.Separator()
         im.TreePop()
+    }
+}
+
+
+interface_edit_levels :: proc(game : ^game_state){
+    if im.BeginTabItem("Game"){
+
+
+        if im.Button("Save level"){
+            curr_room := level_get_curr_room(game)
+            level_save(game, curr_room)
+        }
+
+        im.EndTabItem()
     }
 
 }

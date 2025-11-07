@@ -2,6 +2,7 @@ package main
 
 import b2 "vendor:box2d"
 import "core:container/small_array"
+import "core:encoding/json"
 import "core:fmt"
 import "core:os"
 import "core:strings"
@@ -9,25 +10,10 @@ import "core:strings"
 /*
 	This file contains code relating to levels in the game
 
-	In this game the hirarchy is zone, level and room in that order
+	In this game the hirarchy is level and room in that order
 */
 
 
-//Zone def start
-zone_flags_enum :: enum u64{
-	COMPLETED,
-}
-
-zone_flags :: bit_set[zone_flags_enum; u64]
-
-zone :: struct {
-	levels     : map[string]level,
-	flags      : zone_flags,
-	name       : string,
-	curr_level : string,
-}
-
-//Zone def end
 
 
 level_flags_enum :: enum u64{
@@ -38,11 +24,11 @@ level_flags_enum :: enum u64{
 level_flags :: bit_set[level_flags_enum; u64]
 
 level :: struct {
-	rooms     : map[string]room,
-	flags     : level_flags,
-	name      : string,
-	curr_room : string,
-	name_buf  : [255]u8,
+	rooms      : map[string]room,
+	flags      : level_flags,
+	name       : string,
+	curr_room  : string,
+	initilized : bool,
 }
 
 
@@ -72,45 +58,96 @@ room :: struct {
 	flags          : room_flags,
 
 	//This will be set to whichever shape the player is standing on
-	ground_id      : b2.ShapeId,
+	ground_id      : b2.ShapeId `json:"-"`,
 
-	entities       : [dynamic]entity,
+	entities       : [dynamic]entity `json:"-"`,
 	entity_defs    : [dynamic]entity_def,
 
 	//Represents whichever static_index the player has?
-	player_index   : i32,
+	player_index   : i32 `json:"-"`,
 
 	//static_index -> array index on entities array
 	static_indexes : map[static_index]int,
 
 	//Represents the relation between different entities thruout the world
-	relations      : map[^static_index][dynamic]static_index_global,
+	relations      : map[^static_index][dynamic]static_index_global `json:"-"`,
 	relations_serializeable  : map[static_index][dynamic]static_index_global,
 	name           : string,
-	name_buf       : [255]u8,
+	name_buf       : [255]u8 `fmt:"-" json:"-"`,
 
-	rot_state : rotation_state,
+	rot_state      : rotation_state,
 	zoom           : f32,
 }
 
 
+/*
 level_create_new :: proc(game: ^game_state, curr_room : ^room){
+    {
+        //Capsule
+        def := entity_get_default_def({12,0})
+        def.shape_type = .polygonShape
+        def.flags += {.POLYGON_IS_BOX}
+        def.size = {4, 8}
+        def.scale = 1.0
+
+        def.body_def.type = .kinematicBody
+        def.body_def.angularVelocity = .5
+        append(&curr_room.entity_defs, def)
+    }
+    {
+        //Capsule
+        def := entity_get_default_def({-12,0})
+        def.shape_type = .polygonShape
+        def.flags += {.POLYGON_IS_BOX}
+        def.size = {4, 8}
+        def.scale = 1.0
+
+        def.body_def.type = .kinematicBody
+        def.body_def.angularVelocity = .5
+        def.body_def.rotation = b2.MakeRot(DEG2RAD * 90)
+        append(&curr_room.entity_defs, def)
+    }
     {
         //Capsule
         def := entity_get_default_def({0,0})
         def.shape_type = .polygonShape
-        def.flags += {.POLYGON_IS_BOX}
-        def.size = {8, 8}
+        def.flags += {.POLYGON_IS_BOX, .NO_ROTATION}
+        def.size = {4, 4}
         def.scale = 1.0
 
         def.body_def.type = .kinematicBody
+        append(&curr_room.entity_defs, def)
+    }
+    {
+        //Capsule
+        def := entity_get_default_def({0,-12})
+        def.shape_type = .polygonShape
+        def.flags += {.POLYGON_IS_BOX}
+        def.body_def.angularVelocity = .5
+        def.body_def.rotation = b2.MakeRot(DEG2RAD * 90)
+        def.size = {8, 4}
+        def.scale = 1.0
+
+        def.body_def.type = .kinematicBody
+        append(&curr_room.entity_defs, def)
+    }
+    {
+        //Capsule
+        def := entity_get_default_def({0,12})
+        def.shape_type = .polygonShape
+        def.flags += {.POLYGON_IS_BOX}
+        def.size = {8, 4}
+        def.scale = 1.0
+
+        def.body_def.type = .kinematicBody
+        def.body_def.angularVelocity = .5
         append(&curr_room.entity_defs, def)
     }
 
     {
 
         //Player
-        def := entity_get_default_def({0,20})
+        def := entity_get_default_def({0,9})
         def.shape_type = .polygonShape
         def.flags += {.POLYGON_IS_BOX, .JUMPING}
         def.size = {1, 1}
@@ -121,10 +158,13 @@ level_create_new :: proc(game: ^game_state, curr_room : ^room){
         def.body_def.type = .dynamicBody
         append(&curr_room.entity_defs, def)
     }
+
     curr_room.zoom = 20
+    curr_room.name = "first"
 
     level_reload(game, curr_room)
 }
+*/
 
 level_reload :: proc(game: ^game_state, using curr_room : ^room){
 
@@ -179,24 +219,35 @@ level_reload :: proc(game: ^game_state, using curr_room : ^room){
 }
 
 level_get_curr_room :: proc "c" (game: ^game_state) -> ^room{
-    zone  := &game.zones[game.curr_zone]
-    level := &zone.levels[zone.curr_level]
+    level := &game.levels[game.curr_level]
     room  := &level.rooms[level.curr_room]
     return room
 }
 
 
-level_get_all :: proc "c" (game:^game_state, index : ^static_index_global) -> (^zone, ^level, ^room, ^entity){
-    curr_zone  := &game.zones[index.zone]
-    curr_level := &curr_zone.levels[index.level]
+level_get_all :: proc "c" (game:^game_state, index : ^static_index_global) -> (^level, ^room, ^entity){
+    curr_level := &game.levels[index.level]
     curr_room  := &curr_level.rooms[index.room]
 
     entity_index := curr_room.static_indexes[index.index]
     entity       := &curr_room.entities[entity_index]
 
-    return curr_zone, curr_level, curr_room, entity
+    return curr_level, curr_room, entity
 }
 
+
+level_save :: proc(game: ^game_state, curr_room: ^room){
+
+    err := os.make_directory("levels")
+
+    fmt.println(err)
+
+    level_path := fmt.tprintf("levels/%s.json", curr_room.name)
+
+    data, json_err := json.marshal(curr_room^, {pretty = true ,use_enum_names = true})
+    success := os.write_entire_file_or_err(level_path, data)
+    fmt.println(success)
+}
 
 
 

@@ -1,30 +1,20 @@
 TODO:
 
+Restructure leves
 
-1. Refactor everything
+Just levels with rooms
+
+Save levels a json file
+
+one level -> one json
+
+store each room in a json file
+Connect rooms and levels in imgui editor
+
+List all levels loaded from json files
+
+1. Entities that have gap and rotates around objects but doesn't rotate the screen
+2. Create basic level with interactions
 3. Level serialization
+4. Serialize in json?
 4. More editor features from rubics_2
-
-
-Abstracting the box2d render logic
-Library model probably in single file
-
-Should be independent from the game logic
-
-The game is responsible for creating and storing world_id
-
-expose api to be used by game
-
-(glfw, imgui, box2d)
-
-struct ion_state{
-}
-
-
-ion_init
-
-ion_window_should_close
-
-ion_update_frame (also handle input, handmadehero style)
-
-ion_end_frame

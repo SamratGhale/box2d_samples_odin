@@ -16,7 +16,6 @@ game_mode :: enum {
     PLAY,
     EDIT,
     LEVEL_VIEW,
-    ZONE_VIEW,
 }
 
 rotation_dir :: enum {
@@ -26,38 +25,43 @@ rotation_dir :: enum {
 
 game_state :: struct {
 
-    zones         : map[string]zone,
-    curr_zone     : string,
+    levels        : map[string]level,
+    curr_level    : string,
 	is_initilized, is_edit : bool,
-	time         : f32,
+	time           : f32,
 
 	mode           : game_mode,
 	rot_dir        : rotation_dir,
 	//selected_index : i32,
 	pause          : bool,
 
-	using interface : interface_state,
+	using interface : interface_state `json:"-"`,
 }
 
 game_init :: proc(game: ^game_state){
 
-    game.curr_zone = "one"
-    game.zones[game.curr_zone] = {}
-    curr_zone := &game.zones[game.curr_zone]
 
-    curr_zone.curr_level = "apple"
-    curr_zone.levels[curr_zone.curr_level] = {}
-
-    curr_level := &curr_zone.levels[curr_zone.curr_level]
+    game.levels = {}
+    game.curr_level = "hello"
+    game.levels[game.curr_level] = {}
+    curr_level := &game.levels[game.curr_level]
     curr_level.curr_room = "room1"
     curr_level.rooms[curr_level.curr_room] = {}
+    game.selected_index = -1
 
     curr_room := level_get_curr_room(game)
 
-    level_create_new(game, curr_room)
+    //level_create_new(game, curr_room)
 }
 
 game_step :: proc(game: ^game_state){
+
+    curr_level := &game.levels[game.curr_level]
+
+    if curr_level == nil do return
+    if !curr_level.initilized do return
+
+
     curr_room := level_get_curr_room(game)
 
     using curr_room

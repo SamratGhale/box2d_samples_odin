@@ -3,6 +3,7 @@ package main
 import im "shared:odin-imgui"
 import b2 "vendor:box2d"
 import "base:runtime"
+import "core:strings"
 import "core:container/small_array"
 import "core:fmt"
 
@@ -15,6 +16,7 @@ interface_edit_modes :: enum {
 
 interface_state :: struct {
     selected_index        : i32,
+    selected_room         : string,
     edit_mode             : interface_edit_modes,
     selected_vertex_index : int,
     copied_def            : ^entity_def `json:"-"`,
@@ -70,65 +72,81 @@ interface_edit_entity :: proc(game: ^game_state, using curr_room : ^room){
     mpos :[2]f32= {f32(state.input.mouse_x), f32(state.input.mouse_y)}
     mpos = camera_convert_screen_to_world(&state.draw.cam, mpos)
 
-    entity := &entities[game.selected_index]
-    def    := &entity_defs[game.selected_index]
+    if game.selected_index >= 0{
+        def    := &entity_defs[game.selected_index]
 
-    #partial switch game.edit_mode{
-    //Entity means we've selected a entity
-    case .ENTITY:{
-        if ion_is_down(.MOUSE_LEFT) && ion_is_down(.LEFT_ALT){
-            def.body_def.position = mpos
-            level_reload(game, curr_room)
-        }else if ion_is_pressed(.DELETE){
-            unordered_remove(&entity_defs, game.selected_index)
-            game.selected_index = -1
-            level_reload(game, curr_room)
-        }else if ion_is_down(.LEFT_CTRL) && ion_is_pressed(.C){
-            game.copied_def = def
-        }else if ion_is_down(.LEFT_CTRL) && ion_is_pressed(.V){
+        #partial switch game.edit_mode{
+        //Entity means we've selected a entity
+        case .ENTITY:{
+            if ion_is_down(.MOUSE_LEFT) && ion_is_down(.LEFT_ALT){
+                def.body_def.position = mpos
+                level_reload(game, curr_room)
+            }else if ion_is_pressed(.DELETE){
+                unordered_remove(&entity_defs, game.selected_index)
+                game.selected_index = -1
+                level_reload(game, curr_room)
+            }else if ion_is_down(.LEFT_CTRL) && ion_is_pressed(.C){
+                game.copied_def = def
+            }else if ion_is_down(.LEFT_CTRL) && ion_is_pressed(.V){
+                def := game.copied_def^
+                def.body_def.position = mpos
+                fmt.println(def)
+
+                append(&entity_defs, def)
+                level_reload(game, curr_room)
+            }
+        }
+        case .VERTICES:{
+            if def.shape_type == .capsuleShape{
+                if ion_is_down(.LEFT_CTRL){
+                    mpos -= def.body_def.position
+                    def.centers[game.selected_vertex_index] = mpos
+                    level_reload(game, curr_room)
+                }
+            }else if def.shape_type == .polygonShape || def.shape_type == .chainSegmentShape{
+                if ion_is_pressed(.MOUSE_RIGHT){
+                    mpos -= def.body_def.position
+
+                    small_array.push_back(&def.vertices, mpos)
+                    small_array.push_back(&def.vertices, mpos)
+                    level_reload(game, curr_room)
+                }else if ion_is_down(.LEFT_CTRL){
+                    mpos -= def.body_def.position
+                    small_array.set(&def.vertices, game.selected_vertex_index, mpos)
+                    level_reload(game, curr_room)
+
+                }else if ion_is_pressed(.DELETE){
+                    small_array.unordered_remove(&def.vertices, game.selected_vertex_index)
+
+                    if game.selected_vertex_index >= def.vertices.len{
+                        game.selected_vertex_index -=1
+                    }
+                    level_reload(game, curr_room)
+                }
+            }
+        }
+        }
+    }else{
+        if ion_is_down(.LEFT_CTRL) && ion_is_pressed(.V){
             def := game.copied_def^
             def.body_def.position = mpos
-
             append(&entity_defs, def)
             level_reload(game, curr_room)
         }
     }
-    case .VERTICES:{
-        if def.shape_type == .capsuleShape{
-            if ion_is_down(.LEFT_CTRL){
-                mpos -= def.body_def.position
-                def.centers[game.selected_vertex_index] = mpos
-                level_reload(game, curr_room)
-            }
-        }else if def.shape_type == .polygonShape || def.shape_type == .chainSegmentShape{
-            if ion_is_pressed(.MOUSE_RIGHT){
-                mpos -= def.body_def.position
-
-                small_array.push_back(&def.vertices, mpos)
-                small_array.push_back(&def.vertices, mpos)
-                level_reload(game, curr_room)
-            }else if ion_is_down(.LEFT_CTRL){
-                mpos -= def.body_def.position
-                small_array.set(&def.vertices, game.selected_vertex_index, mpos)
-                level_reload(game, curr_room)
-
-            }else if ion_is_pressed(.DELETE){
-                small_array.unordered_remove(&def.vertices, game.selected_vertex_index)
-
-                if game.selected_vertex_index >= def.vertices.len{
-                    game.selected_vertex_index -=1
-                }
-                level_reload(game, curr_room)
-            }
-        }
-    }
-    }
 }
 
-interface_handle_input :: proc(using game: ^game_state){
+interface_handle_input :: proc(game: ^game_state){
     if im.GetIO().WantCaptureMouse || im.GetIO().WantCaptureKeyboard do return
 
-    curr_room := level_get_curr_room(game)
+    curr_level := &game.levels[game.curr_level]
+
+    if curr_level == nil do return
+    if !curr_level.initilized do return
+
+
+    curr_room  := level_get_curr_room(game)
+
 
     if game.edit_mode == .VERTICES{
 
@@ -178,10 +196,8 @@ interface_handle_input :: proc(using game: ^game_state){
         }
     }
 
-    if game.selected_index != -1{
         //Edit entity imgui
-        interface_edit_entity(game, curr_room)
-    }
+    interface_edit_entity(game, curr_room)
 }
 
 PI :: 3.14159265358979323846
@@ -325,26 +341,217 @@ interface_shape_def_editor :: proc(game: ^game_state, curr_room : ^room){
 }
 
 
-interface_edit_levels :: proc(game : ^game_state){
-    if im.BeginTabItem("Game"){
+
+interface_edit_level :: proc(game : ^game_state){
+    if im.BeginTabItem("Levels", nil, {.Leading}){
+
+        if im.BeginCombo("Game mode", fmt.ctprint(game.mode)){
+
+            for type in game_mode{
+                if im.Selectable(fmt.ctprint(type), game.mode == type) do game.mode = type
+            }
+            im.EndCombo()
+        }
 
 
-        if im.Button("Save level"){
-            curr_room := level_get_curr_room(game)
-            level_save(game, curr_room)
+        if im.BeginCombo("edit mode", fmt.ctprint(game.edit_mode)){
+
+            for type in interface_edit_modes{
+                if im.Selectable(fmt.ctprint(type), game.edit_mode == type) do game.edit_mode = type
+            }
+            im.EndCombo()
+        }
+
+
+        im.Text("Drag level files to load levels")
+
+
+        curr_level := &game.levels[game.curr_level]
+
+        if curr_level != nil && curr_level.initilized{
+            if im.Button("Save current level"){
+                level_save(game, curr_level)
+            }
+            for flag in level_flags_enum{
+                contains := flag in curr_level.flags
+                if im.Checkbox(fmt.ctprint(flag), &contains) do curr_level.flags ~= {flag}
+            }
+            //New room
+
+            im.InputText("New room name", cstring(&curr_level.new_room_buff[0]), 255)
+
+            if im.Button("Create new room"){
+
+                new_room_name_cstr := cstring(&curr_level.new_room_buff[0])
+
+                new_room_name := strings.clone_from_cstring(new_room_name_cstr)
+
+                curr_level.rooms[new_room_name] = {}
+                curr_room := &curr_level.rooms[new_room_name]
+                curr_room.name = new_room_name
+                level_reload(game, curr_room)
+            }
+        }
+
+        for level_name, &val in game.levels{
+            if im.TreeNodeEx(fmt.ctprint(level_name)){
+                im.Separator()
+
+                if val.initilized{
+                    for room_name in val.rooms{
+                        if im.Selectable(fmt.ctprint(room_name)){
+                            game.selected_index = -1
+                            game.curr_level = level_name
+                            curr_level := &game.levels[level_name]
+                            curr_level.curr_room = room_name
+                        }
+                    }
+                }
+                im.TreePop()
+            }
+        }
+        im.EndTabItem()
+    }
+}
+
+/*
+    Configure current room
+    If the current room is selected from level editor
+*/
+interface_edit_room :: proc(game : ^game_state){
+
+    curr_room := level_get_curr_room(game)
+
+    if curr_room == nil || !curr_room.initilized do return
+
+    using curr_room
+
+    if im.BeginTabItem("Room", nil){
+        im.Text("Room name %s", name)
+        im.Text("World id %d", world_id.index1)
+
+        for flag in room_flags_enum{
+            contains := flag in flags
+            if im.Checkbox(fmt.ctprint(flag), &contains) do flags ~= {flag}
         }
 
         im.EndTabItem()
     }
-
 }
 
 
 
+interface_edit_entity_ui :: proc(game: ^game_state) {
+    curr_level := &game.levels[game.curr_level]
 
+    if curr_level == nil || !curr_level.initilized do return
 
+    curr_room := level_get_curr_room(game)
 
+    using curr_room
 
+    if im.BeginTabItem("Entity", nil, {.Leading}){
 
+        im.SliderFloat("Zoom", &zoom, 0, 100)
 
+        if game.selected_index != -1{
+            im.Separator()
 
+            entity  := &entities[game.selected_index]
+            def_old := entity_defs[game.selected_index]
+            def     := &entity_defs[game.selected_index]
+
+            if im.CollapsingHeader("Entity Misc"){
+                if im.BeginCombo("Entity type", fmt.ctprint(def.type)){
+                    for type in entity_type{
+                        if im.Selectable(fmt.ctprint(type)) do def.type = type
+                    }
+                    im.EndCombo()
+                }
+
+                for flag in entity_flags_enum{
+                    contains := flag in def.flags
+                    if im.Checkbox(fmt.ctprint(flag), &contains) do def.flags ~= {flag}
+                }
+
+                im.SliderFloat("Scale", &def.scale, 0, 10)
+
+                //Static static_indexes
+
+                if def.index != 0{
+                    //TODO: static index editor
+                }
+                im.InputInt("Static Index", &def.index)
+            }
+            im.Separator()
+
+            if im.CollapsingHeader("Shape edit"){
+                interface_shape_def_editor(game, curr_room)
+            }
+            im.Separator()
+            if im.CollapsingHeader("Body edit"){
+                interface_body_def_editor(game, curr_room)
+            }
+
+            if def_old != def^ do level_reload(game, curr_room)
+        }
+        im.EndTabItem()
+    }
+    if game.edit_mode == .INSERT{
+        if ion_is_pressed(.MOUSE_RIGHT){
+            mpos :[2]f32= {f32(state.input.mouse_x), f32(state.input.mouse_y)}
+            mpos = camera_convert_screen_to_world(&state.draw.cam, mpos)
+
+            def := entity_get_default_def(mpos)
+            def.type = .NPC
+            def.shape_type = .polygonShape
+            def.flags += {.POLYGON_IS_BOX}
+            append(&entity_defs, def)
+            level_reload(game, curr_room)
+        }
+    }
+}
+
+interface_edit_box2d :: proc(){
+    if im.BeginTabItem("Controls") {
+        debug_draw := &state.draw.debug_draw
+
+        im.Checkbox("Shapes", &debug_draw.drawShapes)
+        im.Checkbox("Joints", &debug_draw.drawJoints)
+        im.Checkbox("Joint Extras", &debug_draw.drawJointExtras)
+        im.Checkbox("Bounds", &debug_draw.drawBounds)
+        im.Checkbox("Contact Points", &debug_draw.drawContacts)
+        im.Checkbox("Contact Normals", &debug_draw.drawContactNormals)
+        im.Checkbox("Contact Inpulses", &debug_draw.drawContactImpulses)
+        im.Checkbox("Contact Features", &debug_draw.drawContactFeatures)
+        im.Checkbox("Friction Inpulses", &debug_draw.drawFrictionImpulses)
+        im.Checkbox("Mass ", &debug_draw.drawMass)
+        im.Checkbox("Body Names", &debug_draw.drawBodyNames)
+        im.Checkbox("Graph Colors", &debug_draw.drawGraphColors)
+        im.Checkbox("Islands ", &debug_draw.drawIslands)
+
+        im.SliderFloat("Rotation", &state.draw.cam.rotation, 0, 360)
+
+        im.EndTabItem()
+    }
+}
+
+interface_update_ui :: proc(game: ^game_state){
+
+    if im.Begin("Tools", &state.draw.show_ui) {
+
+        if im.BeginTabBar("Control Tabs",im.TabBarFlags_FittingPolicyMask_) {
+
+            interface_edit_box2d()
+
+            interface_edit_level(game)
+
+            interface_edit_room(game)
+
+            interface_edit_entity_ui(game)
+
+            im.EndTabBar()
+        }
+    }
+    im.End()
+}

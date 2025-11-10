@@ -1,10 +1,32 @@
 TODO:
 
-Restructure leves
+Create new level
 
-Just levels with rooms
+When loading the files load the handles?
+So that we can read and save changes easily
 
-Save levels a json file
+Show all the levels and rooms in a tree
+
+level view
+
+level editor -> lists all the rooms , can select curr room and editor
+room editor  -> settings related to room, list entity, zoom etc
+entity editor
+box2d editor
+
+
+
+> Level1
+    room1
+    room2
+> Level2
+    room1
+    room2
+
+
+When there is no level loaded don't show any ui,
+Just show a option to create new level or drop a json file
+
 
 one level -> one json
 

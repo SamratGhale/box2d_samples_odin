@@ -30,6 +30,8 @@ ion_state :: struct {
 	text_line:      u32,
 
 	input : ion_input,
+
+	drop_callback : glfw.DropProc
 }
 
 ion_mouse_wheel_callback :: proc "c" (window : glfw.WindowHandle, x_offset, y_offset : f64){
@@ -48,12 +50,6 @@ ion_mouse_position_callback :: proc "c" (window : glfw.WindowHandle, x_pos, y_po
 /*
 When a json file is droppped validate it and add to the game
 */
-ion_glfw_drop_callback :: proc "c" (window: glfw.WindowHandle, count: i32, paths: [^]cstring){
-    context = runtime.default_context()
-
-    fmt.println(paths[0])
-}
-
 ion_init :: proc(using state: ^ion_state) {
 
 	assert(glfw.Init() == true)
@@ -68,7 +64,7 @@ ion_init :: proc(using state: ^ion_state) {
 	}
 	glfw.SetScrollCallback(window,    ion_mouse_wheel_callback)
 	glfw.SetCursorPosCallback(window, ion_mouse_position_callback)
-	glfw.SetDropCallback(window,      ion_glfw_drop_callback)
+	glfw.SetDropCallback(window,      drop_callback)
 
 	glfw.MakeContextCurrent(window)
 	glfw.SwapInterval(1)

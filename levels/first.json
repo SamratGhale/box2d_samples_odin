@@ -1,982 +1,2926 @@
 {
-	"pos": [
-		0,
-		0
-	],
-	"world_id": {
-		"index1": 1,
-		"generation": 0
+	"rooms": {
+		"init": {
+			"pos": [
+				0,
+				0
+			],
+			"flags": 3,
+			"entity_defs": [
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							0.00000000,
+							0.00000000
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "NPC",
+					"flags": 1,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						5.00000000,
+						5.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "dynamicBody",
+						"position": [
+							-0.11999989,
+							5.96999979
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 0.10000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "PLAYER",
+					"flags": 3,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 0.50000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						1.00000000,
+						1.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							-4.53000021,
+							4.13999987
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "chainSegmentShape",
+					"type": "NPC",
+					"flags": 33,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						2.00000000,
+						2.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.04999924,
+								-18.47999954
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								18.56999969,
+								9.99000168
+							],
+							[
+								18.36000061,
+								-18.17999840
+							],
+							[
+								-10.07999992,
+								-18.14999962
+							],
+							[
+								6.30000067,
+								-18.02999878
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 5
+					}
+				},
+				{
+					"body_def": {
+						"type": "kinematicBody",
+						"position": [
+							9.24000168,
+							4.17000008
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": -4.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 0.10000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "capsuleShape",
+					"type": "NPC",
+					"flags": 5,
+					"index": 0,
+					"radius": 0.40500000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							3.00000000,
+							0.00000000
+						],
+						[
+							-3.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						2.00000000,
+						2.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "kinematicBody",
+						"position": [
+							9.14999962,
+							-4.08000088
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 4.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 0.10000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "capsuleShape",
+					"type": "NPC",
+					"flags": 5,
+					"index": 0,
+					"radius": 0.40500000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							3.00000000,
+							0.00000000
+						],
+						[
+							-3.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						2.00000000,
+						2.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							-9.77999973,
+							0.39000034
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "NPC",
+					"flags": 1,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						4.50000000,
+						1.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "kinematicBody",
+						"position": [
+							-0.89999962,
+							-6.60000038
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 2.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 0.10000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "capsuleShape",
+					"type": "NPC",
+					"flags": 5,
+					"index": 0,
+					"radius": 0.40500000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							3.00000000,
+							0.00000000
+						],
+						[
+							-3.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						2.00000000,
+						2.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				}
+			],
+			"static_indexes": {
+
+			},
+			"relations_serializeable": {
+
+			},
+			"name": "",
+			"rot_state": "None",
+			"zoom": 15.00000000,
+			"initilized": true
+		},
+		"hello": {
+			"pos": [
+				0,
+				0
+			],
+			"flags": 0,
+			"entity_defs": [
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							0.00000000,
+							0.00000000
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "NPC",
+					"flags": 1,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						5.00000000,
+						5.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							0.00000000,
+							0.00000000
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "NPC",
+					"flags": 1,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						5.00000000,
+						5.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							0.00000000,
+							0.00000000
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "NPC",
+					"flags": 1,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						5.00000000,
+						5.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							0.00000000,
+							0.00000000
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "NPC",
+					"flags": 1,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						5.00000000,
+						5.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							0.00000000,
+							0.00000000
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "NPC",
+					"flags": 1,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						5.00000000,
+						5.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							0.00000000,
+							0.00000000
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "NPC",
+					"flags": 1,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						5.00000000,
+						5.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							0.00000000,
+							0.00000000
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "NPC",
+					"flags": 1,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						5.00000000,
+						5.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							0.00000000,
+							0.00000000
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "NPC",
+					"flags": 1,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						5.00000000,
+						5.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							0.00000000,
+							0.00000000
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "NPC",
+					"flags": 1,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						5.00000000,
+						5.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				},
+				{
+					"body_def": {
+						"type": "staticBody",
+						"position": [
+							-3.79999971,
+							4.27999878
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 1.00000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "chainSegmentShape",
+					"type": "NPC",
+					"flags": 33,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 1.00000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						2.00000000,
+						2.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.04999924,
+								-18.47999954
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								18.56999969,
+								9.99000168
+							],
+							[
+								18.36000061,
+								-18.17999840
+							],
+							[
+								-10.07999992,
+								-18.14999962
+							],
+							[
+								6.30000067,
+								-18.02999878
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 5
+					}
+				},
+				{
+					"body_def": {
+						"type": "dynamicBody",
+						"position": [
+							-0.13999987,
+							8.19999886
+						],
+						"rotation": {
+							"c": 1.00000000,
+							"s": 0.00000000
+						},
+						"linearVelocity": [
+							0.00000000,
+							0.00000000
+						],
+						"angularVelocity": 0.00000000,
+						"linearDamping": 0.00000000,
+						"angularDamping": 0.00000000,
+						"gravityScale": 0.10000000,
+						"sleepThreshold": 0.05000000,
+						"name": "",
+						"enableSleep": true,
+						"isAwake": true,
+						"fixedRotation": false,
+						"isBullet": false,
+						"isEnabled": true,
+						"allowFastRotation": false,
+						"internalValue": 1152023
+					},
+					"shape_def": {
+						"material": {
+							"friction": 0.60000002,
+							"restitution": 0.00000000,
+							"rollingResistance": 0.00000000,
+							"tangentSpeed": 0.00000000,
+							"userMaterialId": 0,
+							"customColor": 0
+						},
+						"density": 1.00000000,
+						"filter": {
+							"categoryBits": 1,
+							"maskBits": 18446744073709551615,
+							"groupIndex": 0
+						},
+						"isSensor": false,
+						"enableSensorEvents": false,
+						"enableContactEvents": false,
+						"enableHitEvents": false,
+						"enablePreSolveEvents": false,
+						"invokeContactCreation": true,
+						"updateBodyMass": true,
+						"internalValue": 1152023
+					},
+					"shape_type": "polygonShape",
+					"type": "PLAYER",
+					"flags": 3,
+					"index": 0,
+					"radius": 5.00000000,
+					"scale": 0.50000000,
+					"centers": [
+						[
+							-10.00000000,
+							0.00000000
+						],
+						[
+							10.00000000,
+							0.00000000
+						]
+					],
+					"size": [
+						1.00000000,
+						1.00000000
+					],
+					"is_loop": false,
+					"vertices": {
+						"data": [
+							[
+								-10.00000000,
+								-10.00000000
+							],
+							[
+								-10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								10.00000000
+							],
+							[
+								10.00000000,
+								-10.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							],
+							[
+								0.00000000,
+								0.00000000
+							]
+						],
+						"len": 4
+					}
+				}
+			],
+			"static_indexes": {
+
+			},
+			"relations_serializeable": {
+
+			},
+			"name": "hello",
+			"rot_state": "None",
+			"zoom": 15.00000000,
+			"initilized": true
+		}
 	},
 	"flags": 0,
-	"entity_defs": [
-		{
-			"body_def": {
-				"type": "kinematicBody",
-				"position": [
-					12.00000000,
-					0.00000000
-				],
-				"rotation": {
-					"c": 1.00000000,
-					"s": 0.00000000
-				},
-				"linearVelocity": [
-					0.00000000,
-					0.00000000
-				],
-				"angularVelocity": 0.50000000,
-				"linearDamping": 0.00000000,
-				"angularDamping": 0.00000000,
-				"gravityScale": 1.00000000,
-				"sleepThreshold": 0.05000000,
-				"name": "",
-				"enableSleep": true,
-				"isAwake": true,
-				"fixedRotation": false,
-				"isBullet": false,
-				"isEnabled": true,
-				"allowFastRotation": false,
-				"internalValue": 1152023
-			},
-			"shape_def": {
-				"material": {
-					"friction": 0.60000002,
-					"restitution": 0.00000000,
-					"rollingResistance": 0.00000000,
-					"tangentSpeed": 0.00000000,
-					"userMaterialId": 0,
-					"customColor": 0
-				},
-				"density": 1.00000000,
-				"filter": {
-					"categoryBits": 1,
-					"maskBits": 18446744073709551615,
-					"groupIndex": 0
-				},
-				"isSensor": false,
-				"enableSensorEvents": false,
-				"enableContactEvents": false,
-				"enableHitEvents": false,
-				"enablePreSolveEvents": false,
-				"invokeContactCreation": true,
-				"updateBodyMass": true,
-				"internalValue": 1152023
-			},
-			"shape_type": "polygonShape",
-			"type": 0,
-			"flags": 1,
-			"index": 0,
-			"radius": 5.00000000,
-			"scale": 1.00000000,
-			"centers": [
-				[
-					-10.00000000,
-					0.00000000
-				],
-				[
-					10.00000000,
-					0.00000000
-				]
-			],
-			"size": [
-				4.00000000,
-				8.00000000
-			],
-			"is_loop": false,
-			"vertices": {
-				"data": [
-					[
-						-10.00000000,
-						-10.00000000
-					],
-					[
-						-10.00000000,
-						10.00000000
-					],
-					[
-						10.00000000,
-						10.00000000
-					],
-					[
-						10.00000000,
-						-10.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					]
-				],
-				"len": 4
-			}
-		},
-		{
-			"body_def": {
-				"type": "kinematicBody",
-				"position": [
-					-12.00000000,
-					0.00000000
-				],
-				"rotation": {
-					"c": -0.00000004,
-					"s": 1.00000000
-				},
-				"linearVelocity": [
-					0.00000000,
-					0.00000000
-				],
-				"angularVelocity": 0.50000000,
-				"linearDamping": 0.00000000,
-				"angularDamping": 0.00000000,
-				"gravityScale": 1.00000000,
-				"sleepThreshold": 0.05000000,
-				"name": "",
-				"enableSleep": true,
-				"isAwake": true,
-				"fixedRotation": false,
-				"isBullet": false,
-				"isEnabled": true,
-				"allowFastRotation": false,
-				"internalValue": 1152023
-			},
-			"shape_def": {
-				"material": {
-					"friction": 0.60000002,
-					"restitution": 0.00000000,
-					"rollingResistance": 0.00000000,
-					"tangentSpeed": 0.00000000,
-					"userMaterialId": 0,
-					"customColor": 0
-				},
-				"density": 1.00000000,
-				"filter": {
-					"categoryBits": 1,
-					"maskBits": 18446744073709551615,
-					"groupIndex": 0
-				},
-				"isSensor": false,
-				"enableSensorEvents": false,
-				"enableContactEvents": false,
-				"enableHitEvents": false,
-				"enablePreSolveEvents": false,
-				"invokeContactCreation": true,
-				"updateBodyMass": true,
-				"internalValue": 1152023
-			},
-			"shape_type": "polygonShape",
-			"type": 0,
-			"flags": 1,
-			"index": 0,
-			"radius": 5.00000000,
-			"scale": 1.00000000,
-			"centers": [
-				[
-					-10.00000000,
-					0.00000000
-				],
-				[
-					10.00000000,
-					0.00000000
-				]
-			],
-			"size": [
-				4.00000000,
-				8.00000000
-			],
-			"is_loop": false,
-			"vertices": {
-				"data": [
-					[
-						-10.00000000,
-						-10.00000000
-					],
-					[
-						-10.00000000,
-						10.00000000
-					],
-					[
-						10.00000000,
-						10.00000000
-					],
-					[
-						10.00000000,
-						-10.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					]
-				],
-				"len": 4
-			}
-		},
-		{
-			"body_def": {
-				"type": "kinematicBody",
-				"position": [
-					0.00000000,
-					0.00000000
-				],
-				"rotation": {
-					"c": 1.00000000,
-					"s": 0.00000000
-				},
-				"linearVelocity": [
-					0.00000000,
-					0.00000000
-				],
-				"angularVelocity": 0.00000000,
-				"linearDamping": 0.00000000,
-				"angularDamping": 0.00000000,
-				"gravityScale": 1.00000000,
-				"sleepThreshold": 0.05000000,
-				"name": "",
-				"enableSleep": true,
-				"isAwake": true,
-				"fixedRotation": false,
-				"isBullet": false,
-				"isEnabled": true,
-				"allowFastRotation": false,
-				"internalValue": 1152023
-			},
-			"shape_def": {
-				"material": {
-					"friction": 0.60000002,
-					"restitution": 0.00000000,
-					"rollingResistance": 0.00000000,
-					"tangentSpeed": 0.00000000,
-					"userMaterialId": 0,
-					"customColor": 0
-				},
-				"density": 1.00000000,
-				"filter": {
-					"categoryBits": 1,
-					"maskBits": 18446744073709551615,
-					"groupIndex": 0
-				},
-				"isSensor": false,
-				"enableSensorEvents": false,
-				"enableContactEvents": false,
-				"enableHitEvents": false,
-				"enablePreSolveEvents": false,
-				"invokeContactCreation": true,
-				"updateBodyMass": true,
-				"internalValue": 1152023
-			},
-			"shape_type": "polygonShape",
-			"type": 0,
-			"flags": 33,
-			"index": 0,
-			"radius": 5.00000000,
-			"scale": 1.00000000,
-			"centers": [
-				[
-					-10.00000000,
-					0.00000000
-				],
-				[
-					10.00000000,
-					0.00000000
-				]
-			],
-			"size": [
-				4.00000000,
-				4.00000000
-			],
-			"is_loop": false,
-			"vertices": {
-				"data": [
-					[
-						-10.00000000,
-						-10.00000000
-					],
-					[
-						-10.00000000,
-						10.00000000
-					],
-					[
-						10.00000000,
-						10.00000000
-					],
-					[
-						10.00000000,
-						-10.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					]
-				],
-				"len": 4
-			}
-		},
-		{
-			"body_def": {
-				"type": "kinematicBody",
-				"position": [
-					0.00000000,
-					-12.00000000
-				],
-				"rotation": {
-					"c": -0.00000004,
-					"s": 1.00000000
-				},
-				"linearVelocity": [
-					0.00000000,
-					0.00000000
-				],
-				"angularVelocity": 0.50000000,
-				"linearDamping": 0.00000000,
-				"angularDamping": 0.00000000,
-				"gravityScale": 1.00000000,
-				"sleepThreshold": 0.05000000,
-				"name": "",
-				"enableSleep": true,
-				"isAwake": true,
-				"fixedRotation": false,
-				"isBullet": false,
-				"isEnabled": true,
-				"allowFastRotation": false,
-				"internalValue": 1152023
-			},
-			"shape_def": {
-				"material": {
-					"friction": 0.60000002,
-					"restitution": 0.00000000,
-					"rollingResistance": 0.00000000,
-					"tangentSpeed": 0.00000000,
-					"userMaterialId": 0,
-					"customColor": 0
-				},
-				"density": 1.00000000,
-				"filter": {
-					"categoryBits": 1,
-					"maskBits": 18446744073709551615,
-					"groupIndex": 0
-				},
-				"isSensor": false,
-				"enableSensorEvents": false,
-				"enableContactEvents": false,
-				"enableHitEvents": false,
-				"enablePreSolveEvents": false,
-				"invokeContactCreation": true,
-				"updateBodyMass": true,
-				"internalValue": 1152023
-			},
-			"shape_type": "polygonShape",
-			"type": 0,
-			"flags": 1,
-			"index": 0,
-			"radius": 5.00000000,
-			"scale": 1.00000000,
-			"centers": [
-				[
-					-10.00000000,
-					0.00000000
-				],
-				[
-					10.00000000,
-					0.00000000
-				]
-			],
-			"size": [
-				8.00000000,
-				4.00000000
-			],
-			"is_loop": false,
-			"vertices": {
-				"data": [
-					[
-						-10.00000000,
-						-10.00000000
-					],
-					[
-						-10.00000000,
-						10.00000000
-					],
-					[
-						10.00000000,
-						10.00000000
-					],
-					[
-						10.00000000,
-						-10.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					]
-				],
-				"len": 4
-			}
-		},
-		{
-			"body_def": {
-				"type": "kinematicBody",
-				"position": [
-					0.00000000,
-					12.00000000
-				],
-				"rotation": {
-					"c": 1.00000000,
-					"s": 0.00000000
-				},
-				"linearVelocity": [
-					0.00000000,
-					0.00000000
-				],
-				"angularVelocity": 0.50000000,
-				"linearDamping": 0.00000000,
-				"angularDamping": 0.00000000,
-				"gravityScale": 1.00000000,
-				"sleepThreshold": 0.05000000,
-				"name": "",
-				"enableSleep": true,
-				"isAwake": true,
-				"fixedRotation": false,
-				"isBullet": false,
-				"isEnabled": true,
-				"allowFastRotation": false,
-				"internalValue": 1152023
-			},
-			"shape_def": {
-				"material": {
-					"friction": 0.60000002,
-					"restitution": 0.00000000,
-					"rollingResistance": 0.00000000,
-					"tangentSpeed": 0.00000000,
-					"userMaterialId": 0,
-					"customColor": 0
-				},
-				"density": 1.00000000,
-				"filter": {
-					"categoryBits": 1,
-					"maskBits": 18446744073709551615,
-					"groupIndex": 0
-				},
-				"isSensor": false,
-				"enableSensorEvents": false,
-				"enableContactEvents": false,
-				"enableHitEvents": false,
-				"enablePreSolveEvents": false,
-				"invokeContactCreation": true,
-				"updateBodyMass": true,
-				"internalValue": 1152023
-			},
-			"shape_type": "polygonShape",
-			"type": 0,
-			"flags": 1,
-			"index": 0,
-			"radius": 5.00000000,
-			"scale": 1.00000000,
-			"centers": [
-				[
-					-10.00000000,
-					0.00000000
-				],
-				[
-					10.00000000,
-					0.00000000
-				]
-			],
-			"size": [
-				8.00000000,
-				4.00000000
-			],
-			"is_loop": false,
-			"vertices": {
-				"data": [
-					[
-						-10.00000000,
-						-10.00000000
-					],
-					[
-						-10.00000000,
-						10.00000000
-					],
-					[
-						10.00000000,
-						10.00000000
-					],
-					[
-						10.00000000,
-						-10.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					]
-				],
-				"len": 4
-			}
-		},
-		{
-			"body_def": {
-				"type": "dynamicBody",
-				"position": [
-					0.00000000,
-					9.00000000
-				],
-				"rotation": {
-					"c": 1.00000000,
-					"s": 0.00000000
-				},
-				"linearVelocity": [
-					0.00000000,
-					0.00000000
-				],
-				"angularVelocity": 0.00000000,
-				"linearDamping": 0.00000000,
-				"angularDamping": 0.00000000,
-				"gravityScale": 0.10000000,
-				"sleepThreshold": 0.05000000,
-				"name": "",
-				"enableSleep": true,
-				"isAwake": true,
-				"fixedRotation": false,
-				"isBullet": false,
-				"isEnabled": true,
-				"allowFastRotation": false,
-				"internalValue": 1152023
-			},
-			"shape_def": {
-				"material": {
-					"friction": 0.60000002,
-					"restitution": 0.00000000,
-					"rollingResistance": 0.00000000,
-					"tangentSpeed": 0.00000000,
-					"userMaterialId": 0,
-					"customColor": 0
-				},
-				"density": 1.00000000,
-				"filter": {
-					"categoryBits": 1,
-					"maskBits": 18446744073709551615,
-					"groupIndex": 0
-				},
-				"isSensor": false,
-				"enableSensorEvents": false,
-				"enableContactEvents": false,
-				"enableHitEvents": false,
-				"enablePreSolveEvents": false,
-				"invokeContactCreation": true,
-				"updateBodyMass": true,
-				"internalValue": 1152023
-			},
-			"shape_type": "polygonShape",
-			"type": "PLAYER",
-			"flags": 3,
-			"index": 0,
-			"radius": 5.00000000,
-			"scale": 0.50000000,
-			"centers": [
-				[
-					-10.00000000,
-					0.00000000
-				],
-				[
-					10.00000000,
-					0.00000000
-				]
-			],
-			"size": [
-				1.00000000,
-				1.00000000
-			],
-			"is_loop": false,
-			"vertices": {
-				"data": [
-					[
-						-10.00000000,
-						-10.00000000
-					],
-					[
-						-10.00000000,
-						10.00000000
-					],
-					[
-						10.00000000,
-						10.00000000
-					],
-					[
-						10.00000000,
-						-10.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					],
-					[
-						0.00000000,
-						0.00000000
-					]
-				],
-				"len": 4
-			}
-		}
-	],
-	"static_indexes": {
-
-	},
-	"relations_serializeable": {
-
-	},
 	"name": "first",
-	"rot_state": "None",
-	"zoom": 20.00000000
+	"curr_room": "init",
+	"initilized": true
 }

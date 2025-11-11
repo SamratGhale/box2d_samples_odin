@@ -67,7 +67,8 @@ room :: struct {
     player_index   : i32 `json:"-"`,
 
     //static_index -> array index on entities array
-    static_indexes : map[static_index]int,
+    //This will be filled when creating entities
+    static_indexes : map[static_index]int `json:"-"`,
 
     //Represents the relation between different entities thruout the world
     relations      : map[^static_index][dynamic]static_index_global `json:"-"`,
@@ -192,8 +193,12 @@ level_reload :: proc(game: ^game_state, using curr_room : ^room){
         if def.type == .PLAYER{
             curr_room.player_index = i32(i)
         }
+
+        //Add to static indexes
+        if new_entity.index != nil do curr_room.static_indexes[new_entity.index^] = i
     }
 
+    /*
     clear(&relations_serializeable)
 
     for key, val in relations{
@@ -216,10 +221,9 @@ level_reload :: proc(game: ^game_state, using curr_room : ^room){
 
         for v in val do append(&relations[entity.index], v)
     }
+    */
 
     curr_room.initilized = true
-
-
 }
 
 level_get_curr_room :: proc "c" (game: ^game_state) -> ^room{
@@ -277,17 +281,24 @@ level_drop_callback :: proc "c" (window: glfw.WindowHandle, count: i32, paths: [
 
                 for room_name in &curr_level.rooms{
                     curr_room := &curr_level.rooms[room_name]
+
                     level_reload(&game, curr_room)
+
+                    for key, val in curr_room.relations_serializeable{
+                        index  := curr_room.static_indexes[key]
+                        entity := curr_room.entities[index]
+
+                        curr_room.relations[entity.index] = {}
+                        for v in val do append(&curr_room.relations[entity.index], v)
+                    }
+
+
                 }
             }
             delete(data)
         }else{
             //New level init
-
-            curr_level.curr_room = "init"
-            curr_level.rooms[curr_level.curr_room] = {}
-            curr_room := &curr_level.rooms[curr_level.curr_room]
-            level_reload(&game, curr_room)
+            //Don't create a new room?
         }
 
         curr_level.initilized = true
@@ -299,9 +310,26 @@ level_drop_callback :: proc "c" (window: glfw.WindowHandle, count: i32, paths: [
 
 level_save :: proc(game: ^game_state, curr_level: ^level){
 
+
+    //relation serializeable
+
+    for key, &curr_room in curr_level.rooms{
+        clear(&curr_room.relations_serializeable)
+        for key, val in curr_room.relations{
+
+            if key != nil{
+                curr_room.relations_serializeable[key^] = {}
+                for v in val{
+                    append(&curr_room.relations_serializeable[key^], v)
+                }
+            }
+        }
+    }
+
+
+
     err := os.make_directory("levels")
 
-    fmt.println(err)
 
     level_path := fmt.tprintf("levels/%s.json", curr_level.name)
 

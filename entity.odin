@@ -38,6 +38,8 @@ entity_type :: enum {
 	DOOR   = 1 << 3,
 	PORTAL = 1 << 4,
 	BOUNDING_BOX = 1 << 5,
+	KEY    = 1 << 6,
+	DOOR_OPENED = 1 << 7,
 }
 
 entity :: struct {
@@ -120,13 +122,19 @@ entity_create_new :: proc(def : entity_def, world_id: b2.WorldId, entity_len : i
 	def    := def
 	new_entity : entity
 
+	def.shape_def.filter.categoryBits = u64(def.type)
 	new_entity.body_id = b2.CreateBody(world_id, def.body_def)
 	new_entity.type    = def.type
 	new_entity.flags   = def.flags
 
+
 	if def.index != 0{
 		new_entity.index  = new(static_index)
 		new_entity.index^ = def.index
+	}
+
+	if def.type == .PLAYER{
+    	def.shape_def.filter.maskBits ~= u64(entity_type.DOOR_OPENED)
 	}
 
 	/*

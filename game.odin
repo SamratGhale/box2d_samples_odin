@@ -15,7 +15,6 @@ LPUM :: 100
 game_mode :: enum {
     PLAY,
     EDIT,
-    LEVEL_VIEW,
 }
 
 rotation_dir :: enum {
@@ -42,6 +41,7 @@ game_init :: proc(game: ^game_state){
 
 
     game.selected_index = -1
+    game.mode = .EDIT
 
     //level_create_new(game, curr_room)
 }
@@ -50,11 +50,9 @@ game_step :: proc(game: ^game_state){
 
     curr_level := &game.levels[game.curr_level]
 
-    if curr_level == nil do return
-    if !curr_level.initilized do return
-
-
     curr_room := level_get_curr_room(game)
+
+    if curr_room == nil || !curr_room.initilized do return
 
     using curr_room
 

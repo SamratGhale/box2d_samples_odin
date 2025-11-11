@@ -6,6 +6,7 @@ import "base:runtime"
 import "core:strings"
 import "core:container/small_array"
 import "core:fmt"
+import "core:slice"
 
 interface_edit_modes :: enum {
     ENTITY,      //For single entity
@@ -139,13 +140,17 @@ interface_edit_entity :: proc(game: ^game_state, using curr_room : ^room){
 interface_handle_input :: proc(game: ^game_state){
     if im.GetIO().WantCaptureMouse || im.GetIO().WantCaptureKeyboard do return
 
-    curr_level := &game.levels[game.curr_level]
 
-    if curr_level == nil do return
-    if !curr_level.initilized do return
-
+    if ion_is_pressed(.F3){
+        if game.mode == .PLAY do game.mode = .EDIT
+        else do game.mode = .PLAY
+    }
 
     curr_room  := level_get_curr_room(game)
+
+
+    if curr_room == nil || !curr_room.initilized do return
+
 
 
     if game.edit_mode == .VERTICES{
@@ -345,30 +350,27 @@ interface_shape_def_editor :: proc(game: ^game_state, curr_room : ^room){
 interface_edit_level :: proc(game : ^game_state){
     if im.BeginTabItem("Levels", nil, {.Leading}){
 
-        if im.BeginCombo("Game mode", fmt.ctprint(game.mode)){
-
-            for type in game_mode{
-                if im.Selectable(fmt.ctprint(type), game.mode == type) do game.mode = type
-            }
-            im.EndCombo()
-        }
 
 
-        if im.BeginCombo("edit mode", fmt.ctprint(game.edit_mode)){
-
-            for type in interface_edit_modes{
-                if im.Selectable(fmt.ctprint(type), game.edit_mode == type) do game.edit_mode = type
-            }
-            im.EndCombo()
-        }
-
-
-        im.Text("Drag level files to load levels")
 
 
         curr_level := &game.levels[game.curr_level]
 
         if curr_level != nil && curr_level.initilized{
+            im.Text("Game Mode")
+            for type in game_mode{
+                if im.RadioButton(fmt.ctprint(type), game.mode == type){
+                    game.mode = type
+                }
+            }
+
+
+            im.Text("Edit Mode")
+            for type in interface_edit_modes{
+                if im.RadioButton(fmt.ctprint(type), game.edit_mode == type){
+                    game.edit_mode = type
+                }
+            }
             if im.Button("Save current level"){
                 level_save(game, curr_level)
             }
@@ -383,7 +385,6 @@ interface_edit_level :: proc(game : ^game_state){
             if im.Button("Create new room"){
 
                 new_room_name_cstr := cstring(&curr_level.new_room_buff[0])
-
                 new_room_name := strings.clone_from_cstring(new_room_name_cstr)
 
                 curr_level.rooms[new_room_name] = {}
@@ -391,6 +392,8 @@ interface_edit_level :: proc(game : ^game_state){
                 curr_room.name = new_room_name
                 level_reload(game, curr_room)
             }
+        }else{
+            im.Text("Drag level files to load levels")
         }
 
         for level_name, &val in game.levels{
@@ -398,12 +401,19 @@ interface_edit_level :: proc(game : ^game_state){
                 im.Separator()
 
                 if val.initilized{
-                    for room_name in val.rooms{
-                        if im.Selectable(fmt.ctprint(room_name)){
-                            game.selected_index = -1
+
+                    if len(val.rooms) > 0{
+                        for room_name in val.rooms{
+                            if im.Selectable(fmt.ctprint(room_name), game.curr_level == level_name && val.curr_room == room_name){
+                                game.selected_index = -1
+                                game.curr_level = level_name
+                                curr_level := &game.levels[level_name]
+                                curr_level.curr_room = room_name
+                            }
+                        }
+                    }else{
+                        if im.SmallButton("Select room"){
                             game.curr_level = level_name
-                            curr_level := &game.levels[level_name]
-                            curr_level.curr_room = room_name
                         }
                     }
                 }
@@ -427,6 +437,8 @@ interface_edit_room :: proc(game : ^game_state){
     using curr_room
 
     if im.BeginTabItem("Room", nil){
+        im.SliderFloat("Zoom", &zoom, 0, 100)
+
         im.Text("Room name %s", name)
         im.Text("World id %d", world_id.index1)
 
@@ -436,6 +448,71 @@ interface_edit_room :: proc(game : ^game_state){
         }
 
         im.EndTabItem()
+    }
+}
+
+interface_static_index_editor :: proc(game: ^game_state, curr_room : ^room, def: ^entity_def, curr_entity: ^entity){
+    index := &game.curr_static_index
+
+    curr_level := &game.levels[game.curr_level]
+
+    indexes := &curr_room.relations[curr_entity.index]
+    if def.index != 0{
+        //TODO: static index editor
+        curr_state := &game.curr_static_index
+
+        if im.BeginCombo("Room", fmt.ctprint(curr_state.room)){
+
+            for room in curr_level.rooms{
+                if im.Selectable(fmt.ctprint(room), room == curr_state.room){
+                    curr_state.room = room
+                }
+            }
+
+            im.EndCombo()
+        }
+
+        if curr_state.room in curr_level.rooms{
+
+            if im.BeginCombo("Select index", fmt.ctprint(curr_state.index)){
+
+                selected_room := curr_level.rooms[curr_state.room]
+
+                for index in selected_room.static_indexes{
+                    if im.Selectable(fmt.ctprint(index), curr_state.index == index){
+                        curr_state.index = index
+                    }
+                }
+                im.EndCombo()
+            }
+
+            im.InputFloat2("Offset", &index.offset)
+
+            if curr_state.index != 0 {
+
+                if indexes == nil{
+                    curr_room.relations[curr_entity.index] = {}
+                }
+
+                if im.Button("Add index relation"){
+                    if !slice.contains(indexes[:], game.curr_static_index){
+                        append(indexes, game.curr_static_index)
+                    }
+                }
+            }
+
+        }
+    }
+    if indexes != nil{
+        for val, i in indexes{
+            im.Text("%s, %s index = %d", fmt.ctprint(val.level), fmt.ctprint(val.room), val.index)
+
+            im.Text(fmt.ctprintf("Offset = %f", val.offset))
+            im.SameLine()
+            if im.Button("Delete"){
+                ordered_remove(indexes, i)
+            }
+        }
     }
 }
 
@@ -452,7 +529,6 @@ interface_edit_entity_ui :: proc(game: ^game_state) {
 
     if im.BeginTabItem("Entity", nil, {.Leading}){
 
-        im.SliderFloat("Zoom", &zoom, 0, 100)
 
         if game.selected_index != -1{
             im.Separator()
@@ -478,10 +554,10 @@ interface_edit_entity_ui :: proc(game: ^game_state) {
 
                 //Static static_indexes
 
-                if def.index != 0{
-                    //TODO: static index editor
-                }
+                //Select
                 im.InputInt("Static Index", &def.index)
+
+                interface_static_index_editor(game, curr_room, def, entity)
             }
             im.Separator()
 

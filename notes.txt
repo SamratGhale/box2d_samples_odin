@@ -3,9 +3,9 @@ TODO:
 
 
 
-player_filter that excludes keys and
-
 Create new level
+
+Bugs: player goes out of room
 
 When loading the files load the handles?
 So that we can read and save changes easily

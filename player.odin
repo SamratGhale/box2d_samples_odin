@@ -97,18 +97,25 @@ player_collision_callback :: proc "c" (shape_id: b2.ShapeId, ctx: rawptr) -> boo
 
         indexes := &curr_room.relations[entity.index]
 
-        for door in indexes{
-            index := curr_room.static_indexes[door.index]
-            door_entity := &curr_room.entities[index]
+	if indexes != nil{
+	    for door in indexes{
+		index := curr_room.static_indexes[door.index]
+		door_entity := &curr_room.entities[index]
 
-            door_entity.type = .DOOR_OPENED
+		door_entity.type = .DOOR_OPENED
 
-            door_filter := b2.Shape_GetFilter(door_entity.shape_id)
-            door_filter.categoryBits = u64(entity_type.DOOR_OPENED)
-            b2.Shape_SetFilter(door_entity.shape_id, door_filter)
-        }
+		door_filter := b2.Shape_GetFilter(door_entity.shape_id)
+		door_filter.categoryBits = u64(entity_type.DOOR_OPENED)
+		b2.Shape_SetFilter(door_entity.shape_id, door_filter)
+            }
+	}
+
     }
     case .DOOR:{
+
+        if .COMPLETES_LEVEL in  entity.flags{
+
+        }
         //Do the thing
         /*
         if entity.index == nil{
@@ -286,8 +293,8 @@ player_get_bounding_box :: proc(rot: f32, p: b2.Vec2) -> (left, right : b2.AABB)
 
     //Get rotation of the player and rotate the aabbs
 
-    right = {{0.7, -1}, {1, 1}}
-    left = {{-1, -1}, {-0.7, 1}}
+    right = {{0.5, -1}, {1, 1}}
+    left = {{-1, -1}, {-0.5, 1}}
 
     switch (int(rot) % 360) {
     case 270, -90:
@@ -328,7 +335,6 @@ player_update_bounding_box :: proc(game: ^game_state, curr_room: ^room, player: 
 
         aabb_left, aabb_right := player_get_bounding_box(state.draw.cam.rotation, pos)
 
-        /*
         points_left  : [4]b2.Vec2
         points_left[0] = {aabb_left.lowerBound.x, aabb_left.upperBound.y}
         points_left[1] = {aabb_left.upperBound.x, aabb_left.upperBound.y}
@@ -345,7 +351,6 @@ player_update_bounding_box :: proc(game: ^game_state, curr_room: ^room, player: 
         points_right[3] = {aabb_right.lowerBound.x, aabb_right.lowerBound.y}
 
         DrawPolygonFcn(&points_right[0], 4, b2.HexColor.Black, &state.draw)
-        */
 
         result := b2.World_OverlapAABB(curr_room.world_id, aabb_right, bounding_box_filter, overlap_callback_right, game)
         result  = b2.World_OverlapAABB(curr_room.world_id, aabb_left,  bounding_box_filter, overlap_callback_left,  game)

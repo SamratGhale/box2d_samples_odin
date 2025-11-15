@@ -25,9 +25,6 @@ game: game_state
 
 main :: proc() {
 
-    //sample_register("Bodies", "Kinematic", kinematic_create)
-    //sample := sample_entries[0].create_fcn(&sample_ctx)
-
     state.width         = WIDTH
     state.height        = HEIGHT
     state.title         = "ion demo"

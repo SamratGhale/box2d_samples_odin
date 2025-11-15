@@ -43,6 +43,10 @@ game_init :: proc(game: ^game_state){
     game.selected_index = -1
     game.mode = .EDIT
 
+    bounding_box_filter.maskBits ~= u64(entity_type.DOOR_OPENED)
+    bounding_box_filter.maskBits ~= u64(entity_type.KEY)
+    bounding_box_filter.maskBits ~= u64(entity_type.PLAYER)
+
     //level_create_new(game, curr_room)
 }
 

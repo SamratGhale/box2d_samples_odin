@@ -21,6 +21,7 @@ entity_flags_enum :: enum u64{
     GAP_LEFT,
     GAP_RIGHT,
     NO_ROTATION, //This means that the object will remain static
+    COMPLETES_LEVEL,
 }
 entity_flags :: bit_set[entity_flags_enum]
 
@@ -40,6 +41,7 @@ entity_type :: enum {
 	BOUNDING_BOX = 1 << 5,
 	KEY    = 1 << 6,
 	DOOR_OPENED = 1 << 7,
+	WALL = 1 << 8,
 }
 
 entity :: struct {
@@ -135,6 +137,7 @@ entity_create_new :: proc(def : entity_def, world_id: b2.WorldId, entity_len : i
 
 	if def.type == .PLAYER{
     	def.shape_def.filter.maskBits ~= u64(entity_type.DOOR_OPENED)
+    	def.shape_def.filter.maskBits ~= u64(entity_type.KEY)
 	}
 
 	/*

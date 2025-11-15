@@ -202,6 +202,7 @@ ion_button :: enum {
     DELETE,
     C,
     V,
+    R,
 }
 
 //reprensets one input device, i.e keyboard, gamepad
@@ -293,4 +294,5 @@ ion_process_inputs :: proc(){
     ion_process_keyboard_input(&buttons[.DELETE], GetKey(window, KEY_DELETE) == PRESS)
     ion_process_keyboard_input(&buttons[.C], GetKey(window, KEY_C) == PRESS)
     ion_process_keyboard_input(&buttons[.V], GetKey(window, KEY_V) == PRESS)
+    ion_process_keyboard_input(&buttons[.R], GetKey(window, KEY_R) == PRESS)
 }

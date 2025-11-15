@@ -148,9 +148,12 @@ interface_handle_input :: proc(game: ^game_state){
 
     curr_room  := level_get_curr_room(game)
 
-
     if curr_room == nil || !curr_room.initilized do return
 
+    if ion_is_down(.R){
+        level_reload(game, curr_room)
+        state.draw.cam.rotation = 0
+    }
 
 
     if game.edit_mode == .VERTICES{

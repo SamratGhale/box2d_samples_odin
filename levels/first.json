@@ -1788,7 +1788,7 @@
 						"type": "staticBody",
 						"position": [
 							9.84000015,
-							-0.44999981
+							-0.69000053
 						],
 						"rotation": {
 							"c": 1.00000000,
@@ -2158,7 +2158,7 @@
 					},
 					"shape_type": "chainSegmentShape",
 					"type": "NPC",
-					"flags": 33,
+					"flags": 36,
 					"index": 0,
 					"radius": 5.00000000,
 					"scale": 1.00000000,
@@ -2267,8 +2267,8 @@
 					"body_def": {
 						"type": "staticBody",
 						"position": [
-							7.25999975,
-							11.39999962
+							1.40999985,
+							11.22000122
 						],
 						"rotation": {
 							"c": 1.00000000,
@@ -2427,8 +2427,8 @@
 					"body_def": {
 						"type": "staticBody",
 						"position": [
-							13.29000092,
-							-6.26999998
+							13.44000053,
+							-6.65999985
 						],
 						"rotation": {
 							"c": 1.00000000,
@@ -2478,7 +2478,7 @@
 					},
 					"shape_type": "circleShape",
 					"type": "KEY",
-					"flags": 1,
+					"flags": 5,
 					"index": 2,
 					"radius": 0.69999999,
 					"scale": 0.37500000,
@@ -2587,8 +2587,8 @@
 					"body_def": {
 						"type": "staticBody",
 						"position": [
-							14.10000038,
-							13.59000015
+							8.30999947,
+							13.46999931
 						],
 						"rotation": {
 							"c": 1.00000000,
@@ -2638,7 +2638,7 @@
 					},
 					"shape_type": "polygonShape",
 					"type": "DOOR",
-					"flags": 1,
+					"flags": 5,
 					"index": 3,
 					"radius": 5.00000000,
 					"scale": 0.54200000,
@@ -2745,9 +2745,9 @@
 				}
 			],
 			"relations_serializeable": {
-				"3": [
+				"2": [
 					{
-						"index": 2,
+						"index": 3,
 						"level": "",
 						"room": "init",
 						"offset": [
@@ -2756,9 +2756,9 @@
 						]
 					}
 				],
-				"2": [
+				"3": [
 					{
-						"index": 3,
+						"index": 2,
 						"level": "",
 						"room": "init",
 						"offset": [
